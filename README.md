@@ -2,10 +2,10 @@
 social media for movies. Lettrboxd clone
 
 Features to be Implemented
-- Chat functionality with socket.io
-- NodeJS ExpressJS API
-- ReactJS and NextJS frontend
-- Jest Testing
+- Chat functionality
+- Node API
+- React + Next
+
 
 ## user stories
 - Keep track of movies watched
