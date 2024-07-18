@@ -19,4 +19,4 @@ Features to be Implemented
 
 ## tentative database design
 
-<img src="https://github.com/suha-nathan/movie-hive/blob/main/movie-db.jpeg" width="850"/>
+<img src="https://github.com/suha-nathan/movie-hive/blob/main/db-design/movie-db-v2.jpeg" width="850"/>
