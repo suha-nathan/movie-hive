@@ -12,12 +12,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { isBase64Image } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userValidation } from "@/lib/validations/user";
 import * as z from "zod";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
+import { useUploadThing } from "@/lib/uploadthing";
 
 interface Props {
   user: {
@@ -64,9 +66,12 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
   };
 
   function onSubmit(values: z.infer<typeof userValidation>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    const blob = values.profile_photo;
+    const hasImageChanged = isBase64Image(blob); //check if user has uploaded a new photo
+    if (hasImageChanged) {
+      //upload image to database
+      const imgRes = useUploadThing();
+    }
   }
 
   return (
