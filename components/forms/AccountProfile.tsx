@@ -7,7 +7,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -34,7 +33,12 @@ interface Props {
 }
 const AccountProfile = ({ user, btnTitle }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
-  // type formSchema = z.infer<typeof userValidation>;
+  const { startUpload } = useUploadThing("media", {
+    onClientUploadComplete: (fileUrl) => {
+      console.log("file upload complete: ", fileUrl);
+    },
+  });
+
   const form = useForm({
     resolver: zodResolver(userValidation),
     defaultValues: {
@@ -65,14 +69,18 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
     }
   };
 
-  function onSubmit(values: z.infer<typeof userValidation>) {
+  const onSubmit = async (values: z.infer<typeof userValidation>) => {
     const blob = values.profile_photo;
     const hasImageChanged = isBase64Image(blob); //check if user has uploaded a new photo
     if (hasImageChanged) {
-      //upload image to database
-      const imgRes = useUploadThing();
+      //upload image to uploadthing db
+      const imgRes = await startUpload(files);
+      if (imgRes && imgRes[0]) {
+        values.profile_photo = imgRes[0].url;
+      }
     }
-  }
+    //TODOD : Update User profile
+  };
 
   return (
     <Form {...form}>
