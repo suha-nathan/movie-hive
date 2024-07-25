@@ -35,3 +35,45 @@ export async function createComment({
     throw new Error(`Unable to create comment: ${error.message}`);
   }
 }
+
+export async function fetchComments(pageNumber = 1, pageSize = 20) {
+  try {
+    connectToDB();
+    //calculate number of posts to skip
+    const skipAmount = (pageNumber - 1) * pageSize;
+
+    //fetch comments that have no parents i.e. top level threads
+    const commentsQuery = Comment.find({
+      parentId: { $in: [null, undefined] },
+    })
+      .sort({ createdAt: "desc" })
+      .skip(skipAmount)
+      .limit(pageSize)
+      .populate({ path: "commenter", model: User })
+      .populate({
+        path: "children",
+        populate: {
+          path: "commenter",
+          model: User,
+          select: "_id name image",
+        },
+      });
+    const totalCommentsCount = await Comment.countDocuments({
+      parentId: { $in: [null, undefined] },
+    });
+
+    const comments = await commentsQuery.exec();
+    const isNext = totalCommentsCount > skipAmount + comments.length;
+    return { comments, isNext };
+  } catch (error: any) {
+    throw new Error(`Failed to fetch comments: ${error.message}`);
+  }
+}
+
+export async function fetchCommentById(commentId: string) {
+  try {
+    connectToDB();
+  } catch (error: any) {
+    throw new Error(`Failed to fetch comment: ${error.message}`);
+  }
+}
