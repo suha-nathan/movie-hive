@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import {
   Form,
   FormControl,
@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -20,17 +20,16 @@ import { commentValidation } from "@/lib/validations/comment";
 import { createComment } from "@/lib/actions/comment.actions";
 
 interface Props {
-  user: {
-    id: string;
-    objectId: string;
-    username: string;
-    name: string;
-    bio: string;
-    image: string;
-  };
-  btnTitle: string;
+  commentId: string;
+  currentUserImg: string;
+  currentUserId: string;
 }
-const PostThread = ({ userId }: { userId: string }) => {
+
+export default function Comment({
+  commentId,
+  currentUserImg,
+  currentUserId,
+}: Props) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -41,41 +40,47 @@ const PostThread = ({ userId }: { userId: string }) => {
     },
   });
   const onSubmit = async (values: z.infer<typeof commentValidation>) => {
-    await createComment({
-      text: values.comment,
-      commenter: userId,
-      community: null,
-      path: pathname,
-    });
-    router.push("/");
+    await addCommentToThread(
+      commentId,
+      values.comment,
+      JSON.parse(currentUserId),
+      pathname
+    );
+    form.reset();
   };
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col justify-start gap-10 space-y-8"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="comment-form">
         <FormField
           control={form.control}
           name="comment"
           render={({ field }) => (
-            <FormItem className="flex flex-col gap-3 w-full">
+            <FormItem className="flex items-center gap-3 w-full">
               <FormLabel className="text-base-semibold text-light-2 ">
-                Content
+                <Image
+                  src={currentUserImg}
+                  alt="current_user"
+                  width={38}
+                  height={48}
+                  className="rounded-full object-cover"
+                />
               </FormLabel>
-              <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1">
-                <Textarea rows={15} {...field} />
+              <FormControl className="border-none bg-transparent">
+                <Input
+                  type="text"
+                  placeholder="Comment..."
+                  className="no-focus text-light-1 outline-none"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="bg-primary-500">
-          Post Comment
+        <Button type="submit" className="comment-form_btn">
+          Reply
         </Button>
       </form>
     </Form>
   );
-};
-
-export default PostThread;
+}

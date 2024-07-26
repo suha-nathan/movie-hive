@@ -73,7 +73,46 @@ export async function fetchComments(pageNumber = 1, pageSize = 20) {
 export async function fetchCommentById(commentId: string) {
   try {
     connectToDB();
+    const comment = await Comment.findById(commentId)
+      .populate({
+        path: "commenter",
+        model: User,
+        select: "_id id name image",
+      })
+      .populate({
+        path: "children",
+        populate: [
+          {
+            path: "commenter",
+            model: User,
+            select: "_id id name parentId image",
+          },
+          {
+            path: "children",
+            model: Comment,
+            populate: {
+              path: "commenter",
+              model: User,
+              select: "_id id name parentId image",
+            },
+          },
+        ],
+      })
+      .exec();
+    return comment;
   } catch (error: any) {
     throw new Error(`Failed to fetch comment: ${error.message}`);
+  }
+}
+
+export async function addCommentToThread(
+  commentId: string,
+  commentText: string,
+  userId: string,
+  path: string
+) {
+  try {
+  } catch (error: any) {
+    throw new Error("Error while adding comment: ", error);
   }
 }

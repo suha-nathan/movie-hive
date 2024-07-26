@@ -1,4 +1,5 @@
 import CommentCard from "@/components/cards/CommentCard";
+import Comment from "@/components/forms/Comment";
 import { currentUser } from "@clerk/nextjs/server";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { fetchCommentById } from "@/lib/actions/comment.actions";
@@ -29,6 +30,15 @@ const Page = async ({ params }: { params: { id: string } }) => {
           comments={comment.children}
         />
       </div>
+      <div className="mt-7">
+        <Comment
+          commentId={comment._id}
+          currentUserImg={user.imageUrl}
+          currentUserId={JSON.stringify(userInfo._id)}
+        />
+      </div>
     </section>
   );
 };
+
+export default Page;
