@@ -112,6 +112,29 @@ export async function addCommentToThread(
   path: string
 ) {
   try {
+    connectToDB();
+    //find original comment by its ID
+    const originalComment = await Comment.findById(commentId);
+    if (!originalComment) throw new Error("Comment Not Found");
+
+    //create a new comment and set the parent ID to the original comment's ID
+    const newComment = new Comment({
+      text: commentText,
+      commenter: userId,
+      community: "",
+      parentId: commentId,
+    });
+
+    //save the new comment to the database
+    const savedComment = await newComment.save();
+
+    //add new comment ID to the original comment's children array
+    originalComment.children.push(savedComment._id);
+
+    //save the updated original comment to the database
+    await originalComment.save();
+
+    revalidatePath(path);
   } catch (error: any) {
     throw new Error("Error while adding comment: ", error);
   }

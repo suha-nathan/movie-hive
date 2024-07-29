@@ -17,7 +17,7 @@ import * as z from "zod";
 import { usePathname, useRouter } from "next/navigation";
 import { commentValidation } from "@/lib/validations/comment";
 
-import { createComment } from "@/lib/actions/comment.actions";
+import { addCommentToThread } from "@/lib/actions/comment.actions";
 
 interface Props {
   commentId: string;
@@ -39,6 +39,7 @@ export default function Comment({
       comment: "",
     },
   });
+
   const onSubmit = async (values: z.infer<typeof commentValidation>) => {
     await addCommentToThread(
       commentId,
@@ -48,6 +49,7 @@ export default function Comment({
     );
     form.reset();
   };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="comment-form">
