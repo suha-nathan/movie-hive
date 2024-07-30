@@ -5,6 +5,7 @@ import User from "../models/user.model";
 import Comment from "../models/comment.model";
 import Community from "../models/community.model";
 import { revalidatePath } from "next/cache";
+import { FilterQuery, SortOrder } from "mongoose";
 
 interface Params {
   userId: string;
@@ -57,6 +58,60 @@ export async function fetchUser(userId: string) {
     return user;
   } catch (error: any) {
     throw new Error(`Failed to fetch user: ${error.message}`);
+  }
+}
+
+export async function fetchUsers({
+  userId,
+  searchString = "",
+  pageNumber = 1,
+  pageSize = 20,
+  sortBy = "desc",
+}: {
+  userId: string;
+  searchString?: string;
+  pageNumber?: number;
+  pageSize?: number;
+  sortBy?: SortOrder;
+}) {
+  try {
+    connectToDB();
+
+    //number of docs to skip based off of page size and num
+    const skipAmount = (pageNumber - 1) * pageSize;
+
+    //case insensitive regex of searchString
+    const regexQuery = new RegExp(searchString, "i");
+
+    //initial query that does not include current user
+    const query: FilterQuery<typeof User> = { id: { $ne: userId } };
+
+    //if searchString is nonempty, match either username or name
+    if (searchString.trim() !== "") {
+      query.$or = [
+        { username: { $regex: regexQuery } },
+        { name: { $regex: regexQuery } },
+      ];
+    }
+
+    //sort options based on sortBy field
+    const sortOptions = { createdAt: sortBy };
+
+    const usersQuery = User.find(query)
+      .sort(sortOptions)
+      .skip(skipAmount)
+      .limit(pageSize);
+
+    //count the total number of users without limit of pagination
+    const totalUsersCount = await User.countDocuments(query);
+
+    const users = await usersQuery.exec();
+
+    const isNext = totalUsersCount > skipAmount + users.length;
+
+    return { users, isNext };
+  } catch (error: any) {
+    throw new Error(`unable to fetch users: ${error.message}`);
   }
 }
 
