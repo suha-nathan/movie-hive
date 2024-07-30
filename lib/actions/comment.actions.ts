@@ -32,7 +32,7 @@ export async function createComment({
     });
     revalidatePath(path);
   } catch (error: any) {
-    throw new Error(`Unable to create comment: ${error.message}`);
+    throw new Error(`Unable to create comment: ${error}`);
   }
 }
 
@@ -121,10 +121,8 @@ export async function addCommentToThread(
     const newComment = new Comment({
       text: commentText,
       commenter: userId,
-      community: "",
       parentId: commentId,
     });
-
     //save the new comment to the database
     const savedComment = await newComment.save();
 
@@ -136,6 +134,7 @@ export async function addCommentToThread(
 
     revalidatePath(path);
   } catch (error: any) {
-    throw new Error("Error while adding comment: ", error);
+    console.error("Error occurred:", error.message);
+    throw new Error(`Error while adding comment: ${error.message}`);
   }
 }
