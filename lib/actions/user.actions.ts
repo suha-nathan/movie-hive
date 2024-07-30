@@ -2,6 +2,8 @@
 
 import { connectToDB } from "../mongoose";
 import User from "../models/user.model";
+import Comment from "../models/comment.model";
+import Community from "../models/community.model";
 import { revalidatePath } from "next/cache";
 
 interface Params {
@@ -55,5 +57,27 @@ export async function fetchUser(userId: string) {
     return user;
   } catch (error: any) {
     throw new Error(`Failed to fetch user: ${error.message}`);
+  }
+}
+
+export async function fetchUserComments(userId: string) {
+  try {
+    connectToDB();
+    //get all comments made by userId
+    const comments = await User.findOne({ id: userId }).populate({
+      path: "comments",
+      model: Comment,
+      populate: [
+        { path: "community", model: Community, select: "name id image _id" },
+        {
+          path: "children",
+          model: Comment,
+          populate: { path: "commenter", model: User, select: "name image id" },
+        },
+      ],
+    });
+    return comments;
+  } catch (error: any) {
+    throw new Error(`Failed to fetch user posts: ${error.message}`);
   }
 }

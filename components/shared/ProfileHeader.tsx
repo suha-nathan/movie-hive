@@ -39,6 +39,7 @@ export default function ProfileHeader({
             <p className="text-base-medium text-gray-1">@{username}</p>
           </div>
         </div>
+        {/* TODO COmmunity */}
         {profileId === currentUserId && type != "Community" && (
           <Link href="/profile/edit">
             <div className="flex cursor-pointer gap-3 rounded-lg bg-dark-3 px-4 py-2">
