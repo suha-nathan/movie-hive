@@ -17,6 +17,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <head>
+          <link rel="icon" href="/images/favicon.ico" sizes="any" />
+        </head>
         <body className={`${inter.className} bg-dark-1`}>{children}</body>
       </html>
     </ClerkProvider>
