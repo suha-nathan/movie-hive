@@ -23,6 +23,7 @@ export const Searchbar = ({ routeType }: { routeType: string }) => {
     return () => clearTimeout(delayDebounceFn);
   }, [searchQuery, routeType]);
 
+  console.log("route Type: ", routeType);
   return (
     <div className="searchbar">
       <Image
@@ -37,7 +38,7 @@ export const Searchbar = ({ routeType }: { routeType: string }) => {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         placeholder={
-          routeType !== "/search" ? "Search Communities" : "Search Users"
+          routeType !== "search" ? "Search Communities" : "Search Users"
         }
         className="no-focus searchbar_input"
       />

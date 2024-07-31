@@ -2,6 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { fetchUser, fetchUsers } from "@/lib/actions/user.actions";
 import { Searchbar } from "@/components/shared/Searchbar";
+import { UserCard } from "@/components/cards/UserCard";
 
 async function Page({
   searchParams,
@@ -32,7 +33,14 @@ async function Page({
         ) : (
           <>
             {result.users.map((person) => (
-              <p key={person._id}>{person.name}</p>
+              <UserCard
+                key={person.id}
+                id={person.id}
+                name={person.name}
+                username={person.username}
+                imgUrl={person.image}
+                personType="User"
+              />
             ))}
           </>
         )}
