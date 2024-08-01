@@ -135,3 +135,31 @@ export async function fetchUserComments(userId: string) {
     throw new Error(`Failed to fetch user posts: ${error.message}`);
   }
 }
+
+export async function getActivity(userId: string) {
+  try {
+    connectToDB();
+
+    //find all comments created by the user
+    const userComments = await Comment.find({ commenter: userId });
+
+    // collect all the ids of replies made on all of the user's comments
+    const replyCommentIds = userComments.reduce((acc, comment) => {
+      return acc.concat(comment.children);
+    }, []);
+
+    //find all the replies excluding the ones created by the same user
+    const replies = await Comment.find({
+      _id: { $in: replyCommentIds },
+      commenter: { $ne: userId },
+    }).populate({
+      path: "commenter",
+      model: User,
+      select: "name image _id",
+    });
+
+    return replies;
+  } catch (error: any) {
+    throw new Error("Cant get activity: ", error.message);
+  }
+}
