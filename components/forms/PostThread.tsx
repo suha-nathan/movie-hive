@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { usePathname, useRouter } from "next/navigation";
-import { commentValidation } from "@/lib/validations/comment";
+import { threadValidation } from "@/lib/validations/comment";
 
 import { createComment } from "@/lib/actions/comment.actions";
 
@@ -35,12 +35,14 @@ const PostThread = ({ userId }: { userId: string }) => {
   const pathname = usePathname();
 
   const form = useForm({
-    resolver: zodResolver(commentValidation),
+    resolver: zodResolver(threadValidation),
     defaultValues: {
       comment: "",
+      authorId: userId,
     },
   });
-  const onSubmit = async (values: z.infer<typeof commentValidation>) => {
+  const onSubmit = async (values: z.infer<typeof threadValidation>) => {
+    console.log("on submit ", userId);
     await createComment({
       text: values.comment,
       commenter: userId,
@@ -52,15 +54,15 @@ const PostThread = ({ userId }: { userId: string }) => {
   return (
     <Form {...form}>
       <form
+        className="mt-10 flex flex-col justify-start gap-10"
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col justify-start gap-10 space-y-8"
       >
         <FormField
           control={form.control}
           name="comment"
           render={({ field }) => (
-            <FormItem className="flex flex-col gap-3 w-full">
-              <FormLabel className="text-base-semibold text-light-2 ">
+            <FormItem className="flex w-full flex-col gap-3">
+              <FormLabel className="text-base-semibold text-light-2">
                 Content
               </FormLabel>
               <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1">

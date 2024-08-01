@@ -29,7 +29,7 @@ async function Page({
       <Searchbar routeType="search" />
       <div className="mt-14 flex flex-col gap-9">
         {result.users.length === 0 ? (
-          <p className="no-result">No results</p>
+          <p className="no-result">Search for a user</p>
         ) : (
           <>
             {result.users.map((person) => (

@@ -1,5 +1,4 @@
 "use server";
-
 import { connectToDB } from "../mongoose";
 import Comment from "../models/comment.model";
 import { revalidatePath } from "next/cache";
@@ -20,12 +19,12 @@ export async function createComment({
 }: Params) {
   try {
     connectToDB();
+
     const createdComment = await Comment.create({
       text,
       commenter,
       community: null,
     });
-
     //update user model
     await User.findByIdAndUpdate(commenter, {
       $push: { comments: createdComment._id },
