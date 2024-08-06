@@ -33,7 +33,7 @@ export default async function Page() {
                     <span className="mr-1 text-primary-500">
                       {activity.commenter.name}
                     </span>{" "}
-                    replied to your thread
+                    replied to your comment
                   </p>
                 </article>
               </Link>
