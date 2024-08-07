@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { usePathname, useRouter } from "next/navigation";
+import { useOrganization } from "@clerk/nextjs";
 import { threadValidation } from "@/lib/validations/comment";
 
 import { createComment } from "@/lib/actions/comment.actions";
@@ -33,6 +34,7 @@ interface Props {
 const PostThread = ({ userId }: { userId: string }) => {
   const router = useRouter();
   const pathname = usePathname();
+  const { organization } = useOrganization();
 
   const form = useForm({
     resolver: zodResolver(threadValidation),
@@ -42,11 +44,10 @@ const PostThread = ({ userId }: { userId: string }) => {
     },
   });
   const onSubmit = async (values: z.infer<typeof threadValidation>) => {
-    console.log("on submit ", userId);
     await createComment({
       text: values.comment,
       commenter: userId,
-      community: null,
+      community: organization ? organization.id : null,
       path: pathname,
     });
     router.push("/");

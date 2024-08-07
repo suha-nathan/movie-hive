@@ -23,7 +23,7 @@ export async function createComment({
     const createdComment = await Comment.create({
       text,
       commenter,
-      community: null,
+      community,
     });
     //update user model
     await User.findByIdAndUpdate(commenter, {
