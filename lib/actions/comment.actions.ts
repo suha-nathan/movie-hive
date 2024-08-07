@@ -1,29 +1,36 @@
 "use server";
 import { connectToDB } from "../mongoose";
 import Comment from "../models/comment.model";
+import Community from "../models/community.model";
 import { revalidatePath } from "next/cache";
 import User from "../models/user.model";
 
 interface Params {
   text: string;
   commenter: string;
-  community: string | null;
+  communityId: string | null;
   path: string;
 }
 
 export async function createComment({
   text,
   commenter,
-  community,
+  communityId,
   path,
 }: Params) {
   try {
     connectToDB();
 
+    //find the community _id from community -> mongodb _id from clerk organization id
+    const communityIdObject = await Community.findOne(
+      { id: communityId },
+      { _id: 1 }
+    );
+
     const createdComment = await Comment.create({
       text,
       commenter,
-      community,
+      communityIdObject,
     });
     //update user model
     await User.findByIdAndUpdate(commenter, {
@@ -135,5 +142,73 @@ export async function addCommentToThread(
   } catch (error: any) {
     console.error("Error occurred:", error.message);
     throw new Error(`Error while adding comment: ${error.message}`);
+  }
+}
+
+async function fetchAllChildComments(commentId: string): Promise<any[]> {
+  const childComments = await Comment.find({ parentId: commentId });
+  const descendantComments = [];
+
+  for (const childComment of childComments) {
+    const descendants = await fetchAllChildComments(childComment._id);
+    descendantComments.push(descendants);
+  }
+  return descendantComments;
+}
+
+export async function deleteComment(id: string, path: string): Promise<void> {
+  try {
+    connectToDB();
+
+    //find the main comment to be deleted
+    const mainComment = await Comment.findById(id).populate("author community");
+    if (!mainComment) throw new Error("Comment Not Found");
+
+    //fetch all child comments and their descendants recursively
+    const descendantComments = await fetchAllChildComments(id);
+
+    //gather all the comment Ids including the main comment and all child thread IDs
+    const descendantCommentIds = [
+      id,
+      ...descendantComments.map((comment) => comment._id),
+    ];
+
+    //extract commenterIds and communityIds to update User and Comminoty models
+    const uniqueCommenterIds = new Set(
+      [
+        ...descendantComments.map((comment) =>
+          comment.commenter?._id?.toString()
+        ), // Use optional chaining to handle possible undefined values
+        mainComment.commenter?._id?.toString(),
+      ].filter((id) => id !== undefined)
+    );
+
+    const uniqueCommunityIds = new Set(
+      [
+        ...descendantComments.map((comment) =>
+          comment.community?._id?.toString()
+        ), // Use optional chaining to handle possible undefined values
+        mainComment.community?._id?.toString(),
+      ].filter((id) => id !== undefined)
+    );
+
+    //recursively delete child comments and their descendants
+    await Comment.deleteMany({ _id: { $in: descendantCommentIds } });
+
+    //update User Model
+    await User.updateMany(
+      { _id: { $in: Array.from(uniqueCommenterIds) } },
+      { $pull: { comments: { $in: descendantCommentIds } } }
+    );
+
+    //update Community Model
+    await Community.updateMany(
+      { _id: { $in: Array.from(uniqueCommunityIds) } },
+      { $pull: { comments: { $in: descendantCommentIds } } }
+    );
+
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Failed to delete thread: ${error.message}`);
   }
 }

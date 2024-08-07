@@ -47,7 +47,7 @@ const PostThread = ({ userId }: { userId: string }) => {
     await createComment({
       text: values.comment,
       commenter: userId,
-      community: organization ? organization.id : null,
+      communityId: organization ? organization.id : null,
       path: pathname,
     });
     router.push("/");
