@@ -1,8 +1,8 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { fetchUser, fetchUsers } from "@/lib/actions/user.actions";
-import { Searchbar } from "@/components/shared/Searchbar";
-import { UserCard } from "@/components/cards/UserCard";
+import Searchbar from "@/components/shared/Searchbar";
+import UserCard from "@/components/cards/UserCard";
 
 async function Page({
   searchParams,

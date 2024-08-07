@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { useRouter } from "next/navigation";
 
-export const Searchbar = ({ routeType }: { routeType: string }) => {
+const Searchbar = ({ routeType }: { routeType: string }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
@@ -45,3 +45,5 @@ export const Searchbar = ({ routeType }: { routeType: string }) => {
     </div>
   );
 };
+
+export default Searchbar;
