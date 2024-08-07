@@ -11,7 +11,7 @@ interface Props {
   personType: string;
 }
 
-export const UserCard = ({ id, name, username, imgUrl, personType }: Props) => {
+const UserCard = ({ id, name, username, imgUrl, personType }: Props) => {
   const router = useRouter();
   const isCommunity = personType === "Community";
   return (
@@ -45,3 +45,5 @@ export const UserCard = ({ id, name, username, imgUrl, personType }: Props) => {
     </article>
   );
 };
+
+export default UserCard;

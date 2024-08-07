@@ -102,7 +102,7 @@ export async function fetchCommunities({
   searchString?: string;
   pageNumber?: number;
   pageSize?: number;
-  sortBy: SortOrder;
+  sortBy?: SortOrder;
 }) {
   try {
     // Calculate the number of communities to skip based on the page number and page size.
