@@ -52,6 +52,7 @@ const PostThread = ({ userId }: { userId: string }) => {
     });
     router.push("/");
   };
+  console.log("organization: ", organization);
   return (
     <Form {...form}>
       <form
