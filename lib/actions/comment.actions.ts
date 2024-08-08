@@ -30,12 +30,21 @@ export async function createComment({
     const createdComment = await Comment.create({
       text,
       commenter,
-      communityIdObject,
+      community: communityIdObject,
     });
+
     //update user model
     await User.findByIdAndUpdate(commenter, {
       $push: { comments: createdComment._id },
     });
+
+    if (communityIdObject) {
+      // Update Community model
+      await Community.findByIdAndUpdate(communityIdObject, {
+        $push: { comments: createdComment._id },
+      });
+    }
+
     revalidatePath(path);
   } catch (error: any) {
     throw new Error(`Unable to create comment: ${error}`);
@@ -56,6 +65,10 @@ export async function fetchComments(pageNumber = 1, pageSize = 20) {
       .skip(skipAmount)
       .limit(pageSize)
       .populate({ path: "commenter", model: User })
+      .populate({
+        path: "community",
+        model: Community,
+      })
       .populate({
         path: "children",
         populate: {
@@ -84,6 +97,10 @@ export async function fetchCommentById(commentId: string) {
         path: "commenter",
         model: User,
         select: "_id id name image",
+      })
+      .populate({
+        path: "community",
+        model: Community,
       })
       .populate({
         path: "children",
@@ -173,7 +190,7 @@ export async function deleteComment(id: string, path: string): Promise<void> {
       ...descendantComments.map((comment) => comment._id),
     ];
 
-    //extract commenterIds and communityIds to update User and Comminoty models
+    //extract unique commenterIds and communityIds to update User and Comminoty models
     const uniqueCommenterIds = new Set(
       [
         ...descendantComments.map((comment) =>

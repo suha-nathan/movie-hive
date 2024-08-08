@@ -63,7 +63,7 @@ export async function fetchCommunityDetails(id: string) {
 export async function fetchCommunityComments(communityId: string) {
   try {
     connectToDB();
-
+    console.log("trying to fetch community comments: ", communityId);
     const communityPosts = await Community.findById(communityId).populate({
       path: "comments",
       model: Comment,
@@ -85,6 +85,7 @@ export async function fetchCommunityComments(communityId: string) {
       ],
     });
 
+    console.log("COMM POSTS: ", communityPosts);
     return communityPosts;
   } catch (error) {
     console.error("Error fetching community posts:", error);

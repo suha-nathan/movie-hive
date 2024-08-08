@@ -42,11 +42,14 @@ export default async function CommentsTab({
   profileType,
 }: Props) {
   let result: Result;
+
   result =
     profileType !== "Community"
       ? await fetchUserComments(profileId)
-      : fetchCommunityComments(profileId);
+      : await fetchCommunityComments(profileId);
+
   if (!result) redirect("/");
+
   return (
     <section className="mt-9 flex flex-col gap-10">
       {result.comments.map((comment) => (
