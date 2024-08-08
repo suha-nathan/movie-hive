@@ -15,8 +15,6 @@ export async function createCommunity(
 ) {
   try {
     connectToDB();
-    throw new Error("Creating Community");
-    console.log("trying to create community");
     const user = await User.findOne({ id: createdById });
 
     if (!user) throw new Error("User not found");
