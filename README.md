@@ -5,8 +5,8 @@ social media for movies. Lettrboxd clone
 Features to be Implemented
 
 - Chat functionality
-- Node API
-- React + Next
+- Next Server Actions + Node API
+- React + Next App Router
 
 ## user stories
 
