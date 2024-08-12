@@ -21,6 +21,10 @@ Features to be Implemented
 
 <img src="https://github.com/suha-nathan/movie-hive/blob/main/db-design/movie-db-v2.jpeg" width="850"/>
 
+## Figma Initial Design File
+https://www.figma.com/design/3WkbEIC655UWpRdrfCFPKH/movie-hive?node-id=0-1&t=QGMx7xzKl9LorNcm-1 
+
 ## Deployed website
 
 https://movie-hive-eta.vercel.app/
+
