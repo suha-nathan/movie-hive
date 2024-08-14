@@ -1,6 +1,6 @@
 # movie-hive
 
-social media for movies. Lettrboxd clone
+social media for movies.
 
 Features to be Implemented
 
