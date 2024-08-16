@@ -1,27 +1,44 @@
 import mongoose from "mongoose";
 
-const commentSchema = new mongoose.Schema({
-    text: {type: String, required: true},
+const commentSchema = new mongoose.Schema(
+  {
+    text: { type: String, required: true },
     commenter: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    parent: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+    },
+    children: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
+    post: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      refPath: "postModel",
+    },
+    postModel: {
+      type: String,
+      required: true,
+      enum: ["Review", "List"],
+    },
+    taggedUsers: [
+      {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true
-    },
-    community:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Community"
-    },
-    parentId:{
-        type: String
-    },
-    children:[
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Comment"
-        }
+      },
     ],
-},{ timestamps: true})
+  },
+  { timestamps: true }
+);
 
-const Comment = mongoose.models.Comment || mongoose.model("Comment", commentSchema)
+const Comment =
+  mongoose.models.Comment || mongoose.model("Comment", commentSchema);
 
 export default Comment;
