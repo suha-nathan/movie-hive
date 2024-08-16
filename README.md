@@ -1,12 +1,12 @@
 # movie-hive
 
-social media for movies. Lettrboxd clone
+social media for movies.
 
 Features to be Implemented
 
 - Chat functionality
-- Node API
-- React + Next
+- Next Server Actions + Node API
+- React + Next App Router
 
 ## user stories
 
@@ -21,6 +21,10 @@ Features to be Implemented
 
 <img src="https://github.com/suha-nathan/movie-hive/blob/main/db-design/movie-db-v2.jpeg" width="850"/>
 
+## Figma Initial Design File
+https://www.figma.com/design/3WkbEIC655UWpRdrfCFPKH/movie-hive?node-id=0-1&t=QGMx7xzKl9LorNcm-1 
+
 ## Deployed website
 
 https://movie-hive-eta.vercel.app/
+
