@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "tailwind.config.js", "obsolete-app/(root)/search"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "tailwind.config.js", "obsolete-app/(root)/search", "data/movies-tmdb.mts", "data/movies-formatted.mts"],
   "exclude": ["node_modules"]
 }

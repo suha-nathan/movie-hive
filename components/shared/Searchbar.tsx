@@ -9,21 +9,21 @@ const Searchbar = ({ routeType }: { routeType: string }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      if (searchQuery) {
-        router.push(`/${routeType}?q=${searchQuery}`);
-      } else {
-        router.push(`/${routeType}`);
-      }
-    }, 300);
+  // useEffect(() => {
+  //   const delayDebounceFn = setTimeout(() => {
+  //     if (searchQuery) {
+  //       router.push(`/${routeType}?q=${searchQuery}`);
+  //     } else {
+  //       console.log();
+  //       router.push(`/${routeType}`);
+  //     }
+  //   }, 300);
 
-    //cleanup function everytime the component (un)mounts
-    //ensures only the latest setTimeout is run
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchQuery, routeType]);
+  //   //cleanup function everytime the component (un)mounts
+  //   //ensures only the latest setTimeout is run
+  //   return () => clearTimeout(delayDebounceFn);
+  // }, [searchQuery, routeType]);
 
-  console.log("route Type: ", routeType);
   return (
     <div className="searchbar">
       <Image
@@ -37,9 +37,7 @@ const Searchbar = ({ routeType }: { routeType: string }) => {
         type="text"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder={
-          routeType !== "search" ? "Search Communities" : "Search Users"
-        }
+        placeholder={routeType === "movies" ? "Search Movies" : "Search Lists"}
         className="no-focus searchbar_input"
       />
     </div>
