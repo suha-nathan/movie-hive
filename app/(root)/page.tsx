@@ -1,11 +1,12 @@
-import { currentUser } from "@clerk/nextjs/server";
-import { fetchUser } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
-import Searchbar from "@/components/shared/Searchbar";
-import { fetchLatestMovies } from "@/lib/actions/movie.actions";
-import MovieCarousel from "@/components/shared/MovieCarousel";
-import EmblaCarousel from "@/components/shared/EmblaCarousel";
 import { EmblaOptionsType } from "embla-carousel";
+import EmblaCarousel from "@/components/shared/EmblaCarousel";
+import Searchbar from "@/components/shared/Searchbar";
+import CarouselHeader from "@/components/shared/CarouselHeader";
+
+import { fetchLatestMovies } from "@/lib/actions/movie.actions";
+import { fetchUser } from "@/lib/actions/user.actions";
+import { currentUser } from "@clerk/nextjs/server";
 
 async function Home() {
   const user = await currentUser();
@@ -17,8 +18,6 @@ async function Home() {
   if (!userInfo.onboarded) redirect("/onboarding");
 
   const OPTIONS: EmblaOptionsType = { dragFree: true, loop: true };
-  const SLIDE_COUNT = 5;
-  const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 
   const latestMovies = await fetchLatestMovies();
 
@@ -27,8 +26,8 @@ async function Home() {
       <h1 className="head-text text-left">Home</h1>
       <section className="mt-9 flex flex-col gap-10">
         <Searchbar routeType="movies" />
-        <MovieCarousel movies={latestMovies} />
-        <EmblaCarousel slides={SLIDES} options={OPTIONS} />
+        <CarouselHeader />
+        <EmblaCarousel slides={latestMovies} options={OPTIONS} />
       </section>
     </>
   );

@@ -11,12 +11,25 @@ import {
   PrevButton,
   usePrevNextButtons,
 } from "./EmblaCarouselArrowButtons";
-import { DotButton, useDotButton } from "./EmblaCarouselDotButton";
+import Link from "next/link";
+// import { DotButton, useDotButton } from "./EmblaCarouselDotButton";
 
 const TWEEN_FACTOR_BASE = 0.2;
+interface Props {
+  tmdbID: number;
+  title: string;
+  director: string;
+  cast: [string];
+  description: string;
+  poster: string;
+  backdrop: string;
+  runtime: number;
+  genres: [string];
+  releaseDate: Date;
+}
 
 type PropType = {
-  slides: number[];
+  slides: Props[];
   options?: EmblaOptionsType;
 };
 
@@ -26,8 +39,8 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
   const tweenFactor = useRef(0);
   const tweenNodes = useRef<HTMLElement[]>([]);
 
-  const { selectedIndex, scrollSnaps, onDotButtonClick } =
-    useDotButton(emblaApi);
+  //   const { selectedIndex, scrollSnaps, onDotButtonClick } =
+  //     useDotButton(emblaApi);
 
   const {
     prevBtnDisabled,
@@ -105,16 +118,23 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
     <div className="embla">
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
-          {slides.map((index) => (
-            <div className="embla__slide" key={index}>
+          {slides.map((movie) => (
+            <div key={movie.tmdbID} className="embla__slide">
               <div className="embla__parallax">
-                <div className="embla__parallax__layer">
+                <Link
+                  href={`/movies/${
+                    movie.title
+                  }-${movie.releaseDate.getFullYear()}`}
+                  className="embla__parallax__layer"
+                >
+                  {/* <div className="embla__parallax__layer"> */}
                   <img
                     className="embla__slide__img embla__parallax__img"
-                    src={`https://picsum.photos/600/350?v=${index}`}
+                    src={`${movie.poster}`}
                     alt="Your alt text"
                   />
-                </div>
+                  {/* </div> */}
+                </Link>
               </div>
             </div>
           ))}
@@ -125,18 +145,6 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
         <div className="embla__buttons">
           <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
           <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
-        </div>
-
-        <div className="embla__dots">
-          {scrollSnaps.map((_, index) => (
-            <DotButton
-              key={index}
-              onClick={() => onDotButtonClick(index)}
-              className={"embla__dot".concat(
-                index === selectedIndex ? " embla__dot--selected" : ""
-              )}
-            />
-          ))}
         </div>
       </div>
     </div>
