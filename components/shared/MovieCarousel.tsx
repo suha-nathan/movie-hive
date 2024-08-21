@@ -7,21 +7,39 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
+import MovieCard from "../cards/MovieCard";
 
 import React from "react";
 
-function MovieCarousel() {
+interface Props {
+  tmdbID: number;
+  title: string;
+  director: string;
+  cast: [string];
+  description: string;
+  poster: string;
+  backdrop: string;
+  runtime: number;
+  genres: [string];
+  releaseDate: Date;
+}
+
+interface MovieProps {
+  movies: Props[];
+}
+
+function MovieCarousel({ movies }: MovieProps) {
   return (
     <Carousel className="w-full max-w-xs">
       <CarouselContent>
-        {Array.from({ length: 5 }).map((_, index) => (
-          <CarouselItem key={index}>
+        {movies.map((movie) => (
+          <CarouselItem key={movie.tmdbID}>
             <div className="p-1">
-              <Card>
-                <CardContent className="flex aspect-square items-center justify-center p-6">
-                  <span className="text-4xl font-semibold">{index + 1}</span>
-                </CardContent>
-              </Card>
+              {/* <Card> */}
+              {/* <CardContent className="flex aspect-square items-center justify-center p-6"> */}
+              <MovieCard {...movie} />
+              {/* </CardContent> */}
+              {/* </Card> */}
             </div>
           </CarouselItem>
         ))}

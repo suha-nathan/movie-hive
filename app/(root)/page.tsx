@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import Searchbar from "@/components/shared/Searchbar";
 import { fetchLatestMovies } from "@/lib/actions/movie.actions";
 import MovieCarousel from "@/components/shared/MovieCarousel";
+import EmblaCarousel from "@/components/shared/EmblaCarousel";
+import { EmblaOptionsType } from "embla-carousel";
 
 async function Home() {
   const user = await currentUser();
@@ -14,14 +16,19 @@ async function Home() {
   if (!userInfo) return null;
   if (!userInfo.onboarded) redirect("/onboarding");
 
-  // const latestMovies = await fetchLatestMovies();
+  const OPTIONS: EmblaOptionsType = { dragFree: true, loop: true };
+  const SLIDE_COUNT = 5;
+  const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
+
+  const latestMovies = await fetchLatestMovies();
 
   return (
     <>
       <h1 className="head-text text-left">Home</h1>
       <section className="mt-9 flex flex-col gap-10">
         <Searchbar routeType="movies" />
-        <MovieCarousel />
+        <MovieCarousel movies={latestMovies} />
+        <EmblaCarousel slides={SLIDES} options={OPTIONS} />
       </section>
     </>
   );

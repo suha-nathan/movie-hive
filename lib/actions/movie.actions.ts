@@ -4,6 +4,19 @@ import { connectToDB } from "../mongoose";
 import Movie from "../models/movie.model";
 import { SortOrder, FilterQuery } from "mongoose";
 
+interface Props {
+  tmdbID: number;
+  title: string;
+  director: string;
+  cast: [string];
+  description: string;
+  poster: string;
+  backdrop: string;
+  runtime: number;
+  genres: [string];
+  releaseDate: Date;
+}
+
 export async function fetchLatestMovies() {
   try {
     connectToDB();
@@ -20,6 +33,7 @@ export async function fetchLatestMovies() {
     return results;
   } catch (error: any) {
     console.error("ERROR fetching movies: ", error.message);
+    return [];
   }
 }
 
