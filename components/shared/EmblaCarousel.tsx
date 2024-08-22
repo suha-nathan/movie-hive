@@ -16,15 +16,10 @@ import Link from "next/link";
 
 const TWEEN_FACTOR_BASE = 0.2;
 interface Props {
+  _id: string;
   tmdbID: number;
   title: string;
-  director: string;
-  cast: [string];
-  description: string;
   poster: string;
-  backdrop: string;
-  runtime: number;
-  genres: [string];
   releaseDate: Date;
 }
 

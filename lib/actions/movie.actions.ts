@@ -29,8 +29,14 @@ export async function fetchLatestMovies() {
         $lte: endDate,
       },
     }).exec();
-
-    return results;
+    const movies = results.map((movie) => ({
+      _id: movie._id.toString(),
+      title: movie.title,
+      tmdbID: movie.tmdbID,
+      releaseDate: movie.releaseDate,
+      poster: movie.poster,
+    }));
+    return movies;
   } catch (error: any) {
     console.error("ERROR fetching movies: ", error.message);
     return [];
