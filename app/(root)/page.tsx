@@ -3,10 +3,12 @@ import { EmblaOptionsType } from "embla-carousel";
 import EmblaCarousel from "@/components/shared/EmblaCarousel";
 import Searchbar from "@/components/shared/Searchbar";
 import CarouselHeader from "@/components/shared/CarouselHeader";
+import ListCarousel from "@/components/shared/ListCarousel";
 
-import { fetchAll, fetchLatestMovies } from "@/lib/actions/movie.actions";
+import { fetchLatestMovies } from "@/lib/actions/movie.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs/server";
+import { fetchLists } from "@/lib/actions/list.actions";
 
 async function Home() {
   const user = await currentUser();
@@ -20,8 +22,7 @@ async function Home() {
   const OPTIONS: EmblaOptionsType = { dragFree: true, loop: true };
 
   const latestMovies = await fetchLatestMovies();
-  const allMovies = await fetchAll();
-  console.log(allMovies);
+  const lists = await fetchLists();
   return (
     <>
       <section className="mt-9 flex flex-col gap-8">
@@ -30,7 +31,7 @@ async function Home() {
         <EmblaCarousel slides={latestMovies} options={OPTIONS} />
 
         <CarouselHeader headerTitle="Popular Lists" />
-
+        {/* <ListCarousel lists={lists} /> */}
         <CarouselHeader headerTitle="Popular Reviews" />
       </section>
     </>
