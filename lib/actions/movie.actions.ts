@@ -37,6 +37,19 @@ export async function fetchLatestMovies() {
   }
 }
 
+export async function fetchAll() {
+  try {
+    connectToDB();
+
+    const results = await Movie.find({}, "_id title").exec();
+
+    return results;
+  } catch (error: any) {
+    console.error("ERROR fetching movies: ", error.message);
+    return [];
+  }
+}
+
 export async function fetchMoviesBySearch({
   searchString = "",
   pageNumber = 1,
