@@ -26,12 +26,11 @@ async function Home() {
   return (
     <>
       <section className="mt-9 flex flex-col gap-8">
-        <Searchbar routeType="movies" />
         <CarouselHeader headerTitle="Recent Movies" />
         <EmblaCarousel slides={latestMovies} options={OPTIONS} />
 
         <CarouselHeader headerTitle="Popular Lists" />
-        {/* <ListCarousel lists={lists} /> */}
+        <ListCarousel lists={lists} />
         <CarouselHeader headerTitle="Popular Reviews" />
       </section>
     </>

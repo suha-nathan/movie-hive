@@ -9,20 +9,19 @@ const Searchbar = ({ routeType }: { routeType: string }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const delayDebounceFn = setTimeout(() => {
-  //     if (searchQuery) {
-  //       router.push(`/${routeType}?q=${searchQuery}`);
-  //     } else {
-  //       console.log();
-  //       router.push(`/${routeType}`);
-  //     }
-  //   }, 300);
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (searchQuery) {
+        router.push(`/${routeType}?q=${searchQuery}`);
+      } else {
+        router.push(`/${routeType}`);
+      }
+    }, 500);
 
-  //   //cleanup function everytime the component (un)mounts
-  //   //ensures only the latest setTimeout is run
-  //   return () => clearTimeout(delayDebounceFn);
-  // }, [searchQuery, routeType]);
+    //cleanup function everytime the component (un)mounts
+    //ensures only the latest setTimeout is run
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery, routeType]);
 
   return (
     <div className="searchbar">

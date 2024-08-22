@@ -7,7 +7,11 @@ export async function fetchLists() {
   try {
     connectToDB();
 
-    const results = await List.find({}).limit(3).exec();
+    const results = await List.find({})
+      .populate({ path: "movies", select: "poster" })
+      .populate({ path: "creator", select: "_id username image" })
+      .limit(3)
+      .exec();
 
     return results;
   } catch (error: any) {
