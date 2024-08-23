@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import { EmblaOptionsType } from "embla-carousel";
 import EmblaCarousel from "@/components/shared/EmblaCarousel";
-import Searchbar from "@/components/shared/Searchbar";
 import CarouselHeader from "@/components/shared/CarouselHeader";
 import ListCarousel from "@/components/shared/ListCarousel";
+import ReviewSection from "@/components/shared/ReviewSection";
 
 import { fetchLatestMovies } from "@/lib/actions/movie.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
@@ -31,7 +31,9 @@ async function Home() {
 
         <CarouselHeader headerTitle="Popular Lists" />
         <ListCarousel lists={lists} />
+
         <CarouselHeader headerTitle="Popular Reviews" />
+        <ReviewSection />
       </section>
     </>
   );

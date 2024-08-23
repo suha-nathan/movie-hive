@@ -117,9 +117,9 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
             <div key={movie.tmdbID} className="embla__slide">
               <div className="embla__parallax">
                 <Link
-                  href={`/movies/${
-                    movie.title
-                  }-${movie.releaseDate.getFullYear()}`}
+                  href={`/movies/${movie.title
+                    .toLowerCase()
+                    .replace(/\s/g, "-")}-${movie.releaseDate.getFullYear()}`}
                   className="embla__parallax__layer"
                 >
                   {/* <div className="embla__parallax__layer"> */}

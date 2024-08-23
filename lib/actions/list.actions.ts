@@ -8,7 +8,7 @@ export async function fetchLists() {
     connectToDB();
 
     const results = await List.find({})
-      .populate({ path: "movies", select: "poster" })
+      .populate({ path: "movies", select: "poster title releaseDate" })
       .populate({ path: "creator", select: "_id username image" })
       .limit(3)
       .exec();

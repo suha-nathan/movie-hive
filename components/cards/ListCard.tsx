@@ -12,7 +12,7 @@ interface Props {
 function ListCard({ list }: { list: Props }) {
   return (
     <div className="flex flex-col">
-      <div className="flex items-center w-72 relative">
+      <div className="flex items-center w-48 relative">
         <Image
           src={list.movies[1].poster}
           alt="movie_poster_0"
