@@ -23,11 +23,11 @@ interface Review {
 async function ReviewSection() {
   const reviews = await fetchReviews();
   return (
-    <>
+    <div className="flex flex-col">
       {reviews.map((review: Review) => (
         <ReviewCard key={review._id} review={review} />
       ))}
-    </>
+    </div>
   );
 }
 

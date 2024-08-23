@@ -27,7 +27,7 @@ interface Review {
 
 function ReviewCard({ review }: { review: Review }) {
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row max-xs:flex-col max-xs:items-center">
       <Link
         href={`/movies/${generateMovieURL({
           title: review.movie.title,
@@ -43,7 +43,7 @@ function ReviewCard({ review }: { review: Review }) {
         />
       </Link>
       <div className="flex flex-col h-56 w-96 px-6">
-        <div className="flex flex-row h-10 w-full items-center ">
+        <div className="flex flex-row h-10 w-full items-center max-xs:justify-center">
           <div className="text-body-normal text-white">
             {review.movie.title}{" "}
           </div>
@@ -54,12 +54,12 @@ function ReviewCard({ review }: { review: Review }) {
           </div>
         </div>
 
-        <div className="flex flex-row h-16 w-full items-center justify-between">
+        <div className="flex flex-row h-16 w-full items-center justify-between max-xs:justify-center">
           <StarsRating numStars={review.numStars} />
           {/* TODO: Comments count element */}
           <Link
             href={`/profile/${review.reviewer._id}`}
-            className="flex flex-row items-center relative h-11 w-[50%]"
+            className="flex flex-row items-center relative h-11 w-[50%] px-4"
           >
             <Image
               src={review.reviewer.image}
@@ -74,7 +74,9 @@ function ReviewCard({ review }: { review: Review }) {
           </Link>
         </div>
 
-        <p className="text-small-regular text-light-1">{review.text}</p>
+        <p className="text-small-regular text-light-1 flex  max-xs:justify-center">
+          {review.text}
+        </p>
 
         {/* TODO: Button to Like Review */}
       </div>

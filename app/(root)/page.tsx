@@ -25,7 +25,7 @@ async function Home() {
   const lists = await fetchLists();
   return (
     <>
-      <section className="mt-9 flex flex-col gap-6">
+      <section className="mt-9 flex flex-col">
         <CarouselHeader headerTitle="Recent Movies" />
         <EmblaCarousel slides={latestMovies} options={OPTIONS} />
 

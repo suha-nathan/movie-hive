@@ -11,8 +11,8 @@ interface Props {
 
 function ListCard({ list }: { list: Props }) {
   return (
-    <div className="flex flex-col">
-      <div className="flex items-center w-48 relative">
+    <div className="flex w-48 flex-col">
+      <div className="flex items-center relative">
         <Image
           src={list.movies[1].poster}
           alt="movie_poster_0"
@@ -36,7 +36,7 @@ function ListCard({ list }: { list: Props }) {
         />
       </div>
       <div className="h-14 w-72 mt-4">
-        <h4 className="text-light-1 text-left text-base-medium">
+        <h4 className="text-light-1 text-left text-base-medium mb-2">
           {list.title}
         </h4>
         <div className="flex flex-row w-full">
@@ -46,7 +46,7 @@ function ListCard({ list }: { list: Props }) {
           >
             <Image
               src={list.creator.image}
-              alt="user_community_image"
+              alt="user_profile_image"
               height={44}
               width={44}
               className="cursor-pointer rounded-full"

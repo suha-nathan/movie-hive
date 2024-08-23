@@ -11,7 +11,7 @@ interface Props {
 
 function ListCarousel({ lists }: { lists: Props[] }) {
   return (
-    <div className="flex flex-row mr-2 mb-2.5">
+    <div className="grid max-md:grid-cols-1 max-xl:grid-cols-2 grid-cols-3 w-full gap-y-10 pb-10">
       {lists.map((list) => (
         <ListCard list={list} key={list._id} />
       ))}
