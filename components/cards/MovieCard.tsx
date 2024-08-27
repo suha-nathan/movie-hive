@@ -58,18 +58,19 @@ const MovieCard = ({ movie }: { movie: Props }) => {
     ref: ref2,
   });
   return (
-    <section className="mt-9 flex flex-col items-center gap-3">
+    <section className="mt-9 flex flex-col md:flex-row gap-3">
       {/* ---------------Poster--------------- */}
 
-      <div className="relative min-h-60 w-[70vw]">
+      <div className="min-h-60 w-[80vw] md:w-[30%] flex justify-center items-start">
         <Image
           src={movie.poster}
-          className="object-contain"
+          className="object-contain p-1"
           alt="movie poster"
-          fill
+          width={200}
+          height={200}
         />
       </div>
-      <div className="w-64 h-auto flex flex-col gap-4 text-light-1 ">
+      <div className="w-[80%] md:max-w-[40rem] h-auto flex flex-col gap-4 text-light-1 mx-auto">
         {/* ---------------Title--------------- */}
         <div className="text-heading3-bold">
           {movie.title}{" "}
@@ -105,7 +106,7 @@ const MovieCard = ({ movie }: { movie: Props }) => {
             <p
               ref={ref2}
               className={`paragraph-wrap ${
-                !obj2.isShowingMore && "line-clamp-4"
+                !obj2.isShowingMore && "line-clamp-2"
               }`}
             >
               {movie.cast.map((person) => (
