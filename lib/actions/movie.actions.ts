@@ -16,6 +16,7 @@ interface Props {
   genres: [string];
   releaseDate: Date;
 }
+//TODO: Refactor fetchLatest and fetchAll. figure out method to deal with _id
 
 export async function fetchLatestMovies() {
   try {
@@ -47,7 +48,7 @@ export async function fetchAll() {
   try {
     connectToDB();
 
-    const results = await Movie.find({}, "_id title").exec();
+    const results = await Movie.find({}, "_id title");
 
     return results;
   } catch (error: any) {
@@ -103,5 +104,17 @@ export async function fetchMoviesBySearch({
     return { movies, isNext };
   } catch (error: any) {
     console.error("ERROR fetching movies: ", error.message);
+  }
+}
+
+export async function fetchMovieByID(id: string) {
+  try {
+    connectToDB();
+    const result = await Movie.find({ tmdbID: id });
+
+    return result[0];
+  } catch (error: any) {
+    console.error("ERROR fetching movie: ", error.message);
+    return {};
   }
 }

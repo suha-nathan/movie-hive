@@ -9,6 +9,7 @@ interface Review {
   numStars: number;
   movie: {
     _id: string;
+    tmdbID: number;
     title: string;
     poster: string;
     releaseDate: Date;

@@ -30,19 +30,16 @@ export function formatDateString(dateString: string) {
 }
 
 interface Props {
+  tmdbID: number;
   title: string;
-  releaseDate: Date;
 }
 
 export function generateMovieURL(movie: Props) {
-  return `${movie.title
-    .toLowerCase()
-    .replace(/\s/g, "-")}-${movie.releaseDate.getFullYear()}`;
+  return `${movie.tmdbID}-${movie.title.toLowerCase().split(" ")[0]}`;
 }
 
 export function parseMovieURL(url: string) {
   let movieWords = url.split("-");
-  let year = movieWords[movieWords.length - 1];
-  let name = movieWords.splice(movieWords.length - 1, 1).join(" ");
-  return { title: name, releaseYear: year };
+
+  return movieWords[0];
 }

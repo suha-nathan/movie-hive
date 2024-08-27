@@ -12,6 +12,7 @@ import {
   usePrevNextButtons,
 } from "./EmblaCarouselArrowButtons";
 import Link from "next/link";
+import { generateMovieURL } from "@/lib/utils";
 // import { DotButton, useDotButton } from "./EmblaCarouselDotButton";
 
 const TWEEN_FACTOR_BASE = 0.2;
@@ -117,9 +118,10 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
             <div key={movie.tmdbID} className="embla__slide">
               <div className="embla__parallax">
                 <Link
-                  href={`/movies/${movie.title
-                    .toLowerCase()
-                    .replace(/\s/g, "-")}-${movie.releaseDate.getFullYear()}`}
+                  href={`/movies/${generateMovieURL({
+                    tmdbID: movie.tmdbID,
+                    title: movie.title,
+                  })}`}
                   className="embla__parallax__layer"
                 >
                   {/* <div className="embla__parallax__layer"> */}

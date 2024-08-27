@@ -1,18 +1,19 @@
-import { redirect } from "next/navigation";
 import { EmblaOptionsType } from "embla-carousel";
 import EmblaCarousel from "@/components/shared/EmblaCarousel";
 import CarouselHeader from "@/components/shared/CarouselHeader";
 import ListCarousel from "@/components/shared/ListCarousel";
 import ReviewSection from "@/components/shared/ReviewSection";
 
-import { fetchLatestMovies } from "@/lib/actions/movie.actions";
+import { redirect } from "next/navigation";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs/server";
+
+import { fetchLatestMovies } from "@/lib/actions/movie.actions";
 import { fetchLists } from "@/lib/actions/list.actions";
 
 async function Home() {
   const user = await currentUser();
-  if (!user) return null;
+  if (!user) redirect("/sign-in");
 
   const userInfo = await fetchUser(user.id);
 

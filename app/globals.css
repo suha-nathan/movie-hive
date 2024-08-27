@@ -25,6 +25,25 @@
     @apply text-center !text-base-regular text-light-3;
   }
 
+  .edge-blur {
+      @apply bg-glassmorphism p-4 backdrop-blur-lg 
+  }
+  .paragraph-wrap {
+    white-space: pre-wrap;
+    word-break: normal; /* Ensure words do not break within themselves */
+  }
+  .paragraph-wrap span {
+    display: inline-block; /* Allow wrapping but avoid forcing new lines */
+  }
+
+  .bg-override{
+    background-color: none!important;
+  }
+  .bg-override:hover{
+    background-color: none!important;
+
+  }
+
   /* Community Card */
   .community-card {
     @apply w-full rounded-lg bg-dark-3 px-4 py-5 sm:w-96;

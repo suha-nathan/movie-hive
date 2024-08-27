@@ -8,7 +8,10 @@ export async function fetchReviews() {
     connectToDB();
 
     const results = await Review.find({}, "_id title text numStars isSpoiler")
-      .populate({ path: "movie", select: "_id poster title releaseDate" })
+      .populate({
+        path: "movie",
+        select: "_id poster title releaseDate tmdbID",
+      })
       .populate({ path: "reviewer", select: "_id username image" })
       .limit(3)
       .exec();
@@ -23,6 +26,7 @@ export async function fetchReviews() {
         numStars: result.numStars,
         movie: {
           _id: result.movie._id.toString(),
+          tmdbID: result.movie.tmdbID,
           title: result.movie.title,
           poster: result.movie.poster,
           releaseDate: result.movie.releaseDate,

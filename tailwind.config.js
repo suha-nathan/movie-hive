@@ -16,6 +16,20 @@ module.exports = {
       },
     },
     fontSize: {
+      "heading1-year": [
+        "36px",
+        {
+          lineHeight: "140%",
+          fontWeight: "200",
+        },
+      ],
+      "heading3-year": [
+        "24px",
+        {
+          lineHeight: "140%",
+          fontWeight: "200",
+        },
+      ],
       "heading1-bold": [
         "36px",
         {
