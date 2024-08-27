@@ -58,86 +58,116 @@ const MovieCard = ({ movie }: { movie: Props }) => {
     ref: ref2,
   });
   return (
-    <section className="mt-9 flex flex-col md:flex-row gap-3">
+    <section className="mt-9 flex flex-col lg:flex-row ">
       {/* ---------------Poster--------------- */}
-
-      <div className="min-h-60 w-[80vw] md:w-[30%] flex justify-center items-start">
-        <Image
-          src={movie.poster}
-          className="object-contain p-1"
-          alt="movie poster"
-          width={200}
-          height={200}
-        />
-      </div>
-      <div className="w-[80%] md:max-w-[40rem] h-auto flex flex-col gap-4 text-light-1 mx-auto">
-        {/* ---------------Title--------------- */}
-        <div className="text-heading3-bold">
-          {movie.title}{" "}
-          <span className="text-heading3-year items-end">
-            {"("}
-            {movie.releaseDate.getFullYear()}
-            {")"}
-          </span>
+      <div className="flex flex-col md:flex-row gap-3 px-8">
+        <div className="min-h-60 w-[80vw] md:w-[30%] flex justify-center items-start">
+          <Image
+            src={movie.poster}
+            className="object-contain p-1"
+            alt="movie poster"
+            width={200}
+            height={200}
+          />
         </div>
-        <p className="text-base-medium">Director: {movie.director}</p>
-        {/* ---------------Description--------------- */}
-        <div className="flex flex-col">
-          <p
-            ref={ref}
-            className={`text-base-medium break-words ${
-              !isShowingMore && "line-clamp-4"
-            }`}
-          >
-            {movie.description}
-          </p>
-          {isTruncated && (
-            <button
-              className="flex justify-end h-auto w-auto p-1 rounded-lg text-[12px] bg-override text-light-1 underline"
-              onClick={toggleIsShowingMore}
-            >
-              {isShowingMore ? "Show Less" : "Show More"}
-            </button>
-          )}
-        </div>
-        {/* ---------------Cast--------------- */}
-        <div className="flex flex-col ">
-          <div className="flex flex-row flex-wrap">
+        <div className="w-[80%] md:max-w-[40rem] h-auto flex flex-col gap-4 text-light-1 mx-auto">
+          {/* ---------------Title--------------- */}
+          <div className="text-heading3-bold">
+            {movie.title}{" "}
+            <span className="text-heading3-year items-end">
+              {"("}
+              {movie.releaseDate.getFullYear()}
+              {")"}
+            </span>
+          </div>
+          <p className="text-base-medium">Director: {movie.director}</p>
+          {/* ---------------Description--------------- */}
+          <div className="flex flex-col">
             <p
-              ref={ref2}
-              className={`paragraph-wrap ${
-                !obj2.isShowingMore && "line-clamp-2"
+              ref={ref}
+              className={`text-base-medium break-words ${
+                !isShowingMore && "line-clamp-4"
               }`}
             >
-              {movie.cast.map((person) => (
-                <span className="h-auto p-0.5 m-0.5 rounded-md bg-light-4 text-light-1 text-subtle-medium">
-                  {person}
-                </span>
-              ))}
+              {movie.description}
             </p>
+            {isTruncated && (
+              <button
+                className="flex justify-end h-auto w-auto p-1 rounded-lg text-[12px] bg-override text-light-1 underline"
+                onClick={toggleIsShowingMore}
+              >
+                {isShowingMore ? "Show Less" : "Show More"}
+              </button>
+            )}
           </div>
-          {obj2.isTruncated && (
-            <button
-              className="flex justify-end h-auto w-auto p-1 rounded-lg text-[12px] bg-override text-light-1 underline"
-              onClick={obj2.toggleIsShowingMore}
-            >
-              {obj2.isShowingMore ? "Show Less" : "Show More"}
-            </button>
-          )}
+          {/* ---------------Cast--------------- */}
+          <div className="flex flex-col ">
+            <div className="flex flex-row flex-wrap">
+              <p
+                ref={ref2}
+                className={`paragraph-wrap ${
+                  !obj2.isShowingMore && "line-clamp-2"
+                }`}
+              >
+                {movie.cast.map((person) => (
+                  <span className="h-auto p-0.5 m-0.5 rounded-md bg-light-4 text-light-1 text-subtle-medium">
+                    {person}
+                  </span>
+                ))}
+              </p>
+            </div>
+            {obj2.isTruncated && (
+              <button
+                className="flex justify-end h-auto w-auto p-1 rounded-lg text-[12px] bg-override text-light-1 underline"
+                onClick={obj2.toggleIsShowingMore}
+              >
+                {obj2.isShowingMore ? "Show Less" : "Show More"}
+              </button>
+            )}
+          </div>
+          {/* ---------------Runtime and Genre--------------- */}
+          <div className="flex flex-row text-base-medium text-light-1">
+            {" "}
+            Runtime: {movie.runtime} min
+          </div>
+          <div className="flex flex-row flex-wrap text-base-medium text-light-1">
+            Genres:
+            {movie.genres.map((genre) => (
+              <span className="h-auto p-0.5 m-0.5 rounded-md bg-blue text-light-1 text-subtle-medium">
+                {genre}
+              </span>
+            ))}
+          </div>
         </div>
-        {/* ---------------Runtime and Genre--------------- */}
-        <div className="flex flex-row text-base-medium text-light-1">
-          {" "}
-          Runtime: {movie.runtime} min
-        </div>
-        <div className="flex flex-row flex-wrap text-base-medium text-light-1">
-          Genres:
-          {movie.genres.map((genre) => (
-            <span className="h-auto p-0.5 m-0.5 rounded-md bg-blue text-light-1 text-subtle-medium">
-              {genre}
-            </span>
-          ))}
-        </div>
+      </div>
+      <div className="flex flex-row lg:flex-col justify-center lg:justify-start gap-2 lg:gap-4 mt-4">
+        <Button className="movie-card-like_btn">
+          <span className="hidden sm:inline pr-1">Like Movie</span>
+          <Image
+            src="/assets/heart.svg"
+            alt="heart_icon"
+            width={20}
+            height={20}
+          />
+        </Button>
+        <Button className="movie-card-review_btn">
+          <span className="hidden sm:inline pr-1">Leave Review</span>
+          <Image
+            src="/assets/pen-solid.svg"
+            alt="pen_icon"
+            width={20}
+            height={20}
+          />
+        </Button>
+        <Button className="movie-card-list_btn">
+          <span className="hidden sm:inline pr-1">Make List</span>
+          <Image
+            src="/assets/rectangle-list-regular.svg"
+            alt="list_icon"
+            width={20}
+            height={20}
+          />
+        </Button>
       </div>
     </section>
   );

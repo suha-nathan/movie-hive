@@ -45,3 +45,21 @@ export async function fetchReviews() {
     return [];
   }
 }
+
+export async function fetchReviewsByMovie(movieId: string) {
+  try {
+    connectToDB();
+    const reviews = await Review.find({ movie: movieId })
+      .populate({
+        path: "reviewer",
+        select: "_id username image",
+      })
+      .sort("desc")
+      .limit(2);
+    console.log(reviews);
+    return reviews;
+  } catch (error: any) {
+    console.error("ERROR fetching reviews: ", error.message);
+    return [];
+  }
+}

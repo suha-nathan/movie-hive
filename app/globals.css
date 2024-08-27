@@ -5,7 +5,8 @@
 @layer components {
   /* main */
   .main-container {
-    @apply flex min-h-screen flex-1 flex-col items-center bg-dark-1 px-6 pb-10 pt-[4rem] max-md:pb-32 sm:px-10 ;
+    @apply flex min-h-screen flex-1 flex-col items-center bg-dark-1 
+    px-0 pb-10 pt-[4rem] max-md:pb-32 sm:px-10 ;
   }
 
   /* Head Text */
@@ -36,12 +37,15 @@
     display: inline-block; /* Allow wrapping but avoid forcing new lines */
   }
 
-  .bg-override{
-    background-color: none!important;
+  /* Movie Card*/
+  .movie-card-like_btn {
+    @apply h-auto min-w-[74px] rounded-lg bg-primary-500 text-[13px] text-light-1 !important;
   }
-  .bg-override:hover{
-    background-color: none!important;
-
+  .movie-card-review_btn {
+    @apply h-auto min-w-[74px] rounded-lg bg-blue text-[13px] text-light-1 !important;
+  }
+  .movie-card-list_btn {
+    @apply h-auto min-w-[74px] rounded-lg bg-secondary-500 text-[13px] text-light-1 !important;
   }
 
   /* Community Card */

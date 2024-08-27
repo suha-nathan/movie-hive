@@ -1,11 +1,14 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs/server";
-
+import { fetchUser } from "@/lib/actions/user.actions";
 import { parseMovieURL } from "@/lib/utils";
 import { fetchMovieByID } from "@/lib/actions/movie.actions";
+import { fetchReviewsByMovie } from "@/lib/actions/review.action";
+
 import MovieCard from "@/components/cards/MovieCard";
+import CarouselHeader from "@/components/shared/CarouselHeader";
+import MovieReviews from "@/components/shared/MovieReviews";
 
 async function Page({ params }: { params: { title: string } }) {
   const user = await currentUser();
@@ -17,15 +20,21 @@ async function Page({ params }: { params: { title: string } }) {
 
   const id = parseMovieURL(params.title);
   const movie = await fetchMovieByID(id);
+  const reviews = await fetchReviewsByMovie(movie._id.toString());
+
+  //TODO
+  // const lists = await fetchListsByMovie(movie._id.toString())
 
   return (
-    <>
+    <div className="mx-auto">
       <MovieCard movie={movie} />
 
-      <div>{/* Recent reviews */}</div>
+      {/* Recent reviews */}
+      <CarouselHeader headerTitle="Recent Reviews" style="mt-4" />
+      <MovieReviews reviews={reviews} />
 
       <div>{/* Popular Lists */}</div>
-    </>
+    </div>
   );
 }
 
