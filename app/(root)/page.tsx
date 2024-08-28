@@ -12,6 +12,7 @@ import { fetchLatestMovies } from "@/lib/actions/movie.actions";
 import { fetchLists } from "@/lib/actions/list.actions";
 
 import Link from "next/link";
+import Image from "next/image";
 
 async function Home() {
   const user = await currentUser();
@@ -38,16 +39,6 @@ async function Home() {
 
         <CarouselHeader headerTitle="Popular Reviews" />
         <ReviewSection />
-
-        <Link className="card" href={`/photos/1`} passHref>
-          1
-        </Link>
-        <Link className="card" href={`/photos/2`} passHref>
-          2
-        </Link>
-        <Link className="card" href={`/photos/3`} passHref>
-          3
-        </Link>
       </section>
     </>
   );

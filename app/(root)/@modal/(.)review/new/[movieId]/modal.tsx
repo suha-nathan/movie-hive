@@ -9,6 +9,7 @@ export function Modal({ children }: { children: React.ReactNode }) {
   const dialogRef = useRef<ElementRef<"dialog">>(null);
 
   useEffect(() => {
+    console.log("modal is opening");
     if (!dialogRef.current?.open) {
       dialogRef.current?.showModal();
     }
@@ -17,7 +18,6 @@ export function Modal({ children }: { children: React.ReactNode }) {
   function onDismiss() {
     router.back();
   }
-
   return createPortal(
     <div className="modal-backdrop">
       <dialog ref={dialogRef} className="modal" onClose={onDismiss}>

@@ -15,7 +15,7 @@ export const metadata = {
   description: "A NextJS movie social media Application",
 };
 
-export default function RootLayout(props:{
+export default function RootLayout(props: {
   children: React.ReactNode;
   modal: React.ReactNode;
 }) {
@@ -34,7 +34,6 @@ export default function RootLayout(props:{
                 {props.children}
 
                 {props.modal}
-                <div id="modal-root" />
               </div>
             </section>
             {/* <RightSidebar /> */}
