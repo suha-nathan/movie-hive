@@ -11,6 +11,8 @@ import { currentUser } from "@clerk/nextjs/server";
 import { fetchLatestMovies } from "@/lib/actions/movie.actions";
 import { fetchLists } from "@/lib/actions/list.actions";
 
+import Link from "next/link";
+
 async function Home() {
   const user = await currentUser();
   if (!user) redirect("/sign-in");
@@ -24,6 +26,7 @@ async function Home() {
 
   const latestMovies = await fetchLatestMovies();
   const lists = await fetchLists();
+
   return (
     <>
       <section className="mt-9 flex flex-col">
@@ -35,6 +38,16 @@ async function Home() {
 
         <CarouselHeader headerTitle="Popular Reviews" />
         <ReviewSection />
+
+        <Link className="card" href={`/photos/1`} passHref>
+          1
+        </Link>
+        <Link className="card" href={`/photos/2`} passHref>
+          2
+        </Link>
+        <Link className="card" href={`/photos/3`} passHref>
+          3
+        </Link>
       </section>
     </>
   );

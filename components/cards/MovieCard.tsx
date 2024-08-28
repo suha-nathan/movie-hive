@@ -109,8 +109,11 @@ const MovieCard = ({ movie }: { movie: Props }) => {
                   !obj2.isShowingMore && "line-clamp-2"
                 }`}
               >
-                {movie.cast.map((person) => (
-                  <span className="h-auto p-0.5 m-0.5 rounded-md bg-light-4 text-light-1 text-subtle-medium">
+                {movie.cast.map((person, index) => (
+                  <span
+                    key={`${person}-${index}`}
+                    className="h-auto p-0.5 m-0.5 rounded-md bg-light-4 text-light-1 text-subtle-medium"
+                  >
                     {person}
                   </span>
                 ))}
@@ -132,14 +135,18 @@ const MovieCard = ({ movie }: { movie: Props }) => {
           </div>
           <div className="flex flex-row flex-wrap text-base-medium text-light-1">
             Genres:
-            {movie.genres.map((genre) => (
-              <span className="h-auto p-0.5 m-0.5 rounded-md bg-blue text-light-1 text-subtle-medium">
+            {movie.genres.map((genre, index) => (
+              <span
+                key={`${genre}-${index}`}
+                className="h-auto p-0.5 m-0.5 rounded-md bg-blue text-light-1 text-subtle-medium"
+              >
                 {genre}
               </span>
             ))}
           </div>
         </div>
       </div>
+      {/* --------------- Buttons --------------- */}
       <div className="flex flex-row lg:flex-col justify-center lg:justify-start gap-2 lg:gap-4 mt-4">
         <Button className="movie-card-like_btn">
           <span className="hidden sm:inline pr-1">Like Movie</span>
@@ -150,15 +157,22 @@ const MovieCard = ({ movie }: { movie: Props }) => {
             height={20}
           />
         </Button>
-        <Button className="movie-card-review_btn">
+        {/* <Button className="movie-card-review_btn"> */}
+        <Link
+          className="card movie-card-review_btn"
+          href={"/review/new"}
+          passHref
+        >
           <span className="hidden sm:inline pr-1">Leave Review</span>
+
           <Image
             src="/assets/pen-solid.svg"
             alt="pen_icon"
             width={20}
             height={20}
           />
-        </Button>
+        </Link>
+        {/* </Button> */}
         <Button className="movie-card-list_btn">
           <span className="hidden sm:inline pr-1">Make List</span>
           <Image

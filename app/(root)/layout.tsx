@@ -15,11 +15,10 @@ export const metadata = {
   description: "A NextJS movie social media Application",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+export default function RootLayout(props:{
   children: React.ReactNode;
-}>) {
+  modal: React.ReactNode;
+}) {
   return (
     <ClerkProvider>
       <html lang="en">
@@ -31,7 +30,12 @@ export default function RootLayout({
           <main className="flex flex-row">
             <LeftSidebar />
             <section className="main-container">
-              <div className="w-full max-w-7xl">{children}</div>
+              <div className="w-full max-w-7xl">
+                {props.children}
+
+                {props.modal}
+                <div id="modal-root" />
+              </div>
             </section>
             {/* <RightSidebar /> */}
           </main>

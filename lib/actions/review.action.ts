@@ -56,7 +56,7 @@ export async function fetchReviewsByMovie(movieId: string) {
       })
       .sort("desc")
       .limit(2);
-    console.log(reviews);
+
     return reviews;
   } catch (error: any) {
     console.error("ERROR fetching reviews: ", error.message);

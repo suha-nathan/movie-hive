@@ -10,7 +10,7 @@ import MovieCard from "@/components/cards/MovieCard";
 import CarouselHeader from "@/components/shared/CarouselHeader";
 import MovieReviews from "@/components/shared/MovieReviews";
 
-async function Page({ params }: { params: { title: string } }) {
+async function Page({ params }: { params: { id: string } }) {
   const user = await currentUser();
   if (!user) redirect("/sign-in");
 
@@ -18,7 +18,7 @@ async function Page({ params }: { params: { title: string } }) {
   if (!userInfo) return null;
   if (!userInfo.onboarded) redirect("/onboarding");
 
-  const id = parseMovieURL(params.title);
+  const id = parseMovieURL(params.id);
   const movie = await fetchMovieByID(id);
   const reviews = await fetchReviewsByMovie(movie._id.toString());
 
@@ -34,6 +34,7 @@ async function Page({ params }: { params: { title: string } }) {
       <MovieReviews reviews={reviews} />
 
       <div>{/* Popular Lists */}</div>
+      <CarouselHeader headerTitle="Included in Lists" style="mt-4" />
     </div>
   );
 }
