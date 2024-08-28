@@ -159,8 +159,8 @@ const MovieCard = ({ movie }: { movie: Props }) => {
         </Button>
         {/* <Button className="movie-card-review_btn"> */}
         <Link
-          className="card movie-card-review_btn"
-          href={"/review/new"}
+          className="movie-card-review_btn"
+          href={`/review/new/${movie.tmdbID}`}
           passHref
         >
           <span className="hidden sm:inline pr-1">Leave Review</span>

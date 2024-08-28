@@ -11,9 +11,6 @@ import { currentUser } from "@clerk/nextjs/server";
 import { fetchLatestMovies } from "@/lib/actions/movie.actions";
 import { fetchLists } from "@/lib/actions/list.actions";
 
-import Link from "next/link";
-import Image from "next/image";
-
 async function Home() {
   const user = await currentUser();
   if (!user) redirect("/sign-in");
