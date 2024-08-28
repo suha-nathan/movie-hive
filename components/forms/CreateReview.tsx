@@ -116,14 +116,17 @@ const CreateReview = ({
           control={form.control}
           name="isSpoiler"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-dark-4 p-4 shadow">
               <FormControl>
                 <Checkbox
+                  className="bg-white"
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
               </FormControl>
-              <FormLabel>is your review a spoiler?</FormLabel>
+              <FormLabel className="text-light-1">
+                does your review contain spoilers?
+              </FormLabel>
             </FormItem>
           )}
         />
