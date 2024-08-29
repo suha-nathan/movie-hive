@@ -9,7 +9,6 @@ export function Modal({ children }: { children: React.ReactNode }) {
   const dialogRef = useRef<ElementRef<"dialog">>(null);
 
   useEffect(() => {
-    console.log("modal is opening");
     if (!dialogRef.current?.open) {
       dialogRef.current?.showModal();
     }

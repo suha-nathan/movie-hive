@@ -17,17 +17,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Checkbox } from "../ui/checkbox";
 import { Calendar } from "../ui/calendar";
+import { CalendarIcon } from "@radix-ui/react-icons";
+
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { Checkbox } from "../ui/checkbox";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { usePathname, useRouter } from "next/navigation";
 import { reviewValidation } from "@/lib/validations/review";
+// import { TagsInput } from "../ui/TagsInput";
 
 const CreateReview = ({
   userId,
@@ -175,6 +177,25 @@ const CreateReview = ({
           )}
         />
         <div id="calendar-pose"></div>
+        {/* <FormField
+          control={form.control}
+          name="numStars"
+          render={({ field }) => (
+            <FormItem className="flex flex-col gap-3 w-full">
+              <FormLabel className="text-base-semibold text-light-2 ">
+                Tags
+              </FormLabel>
+              <FormControl>
+                <TagsInput
+                  type="text"
+                  className="account-form_input no-focus"
+                  // {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        /> */}
         <Button type="submit" className="bg-primary-500">
           Create Review
         </Button>
