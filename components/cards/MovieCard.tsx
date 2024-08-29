@@ -147,7 +147,11 @@ const MovieCard = ({ movie }: { movie: Props }) => {
         </div>
       </div>
       {/* --------------- Buttons --------------- */}
-      <div className="flex flex-row lg:flex-col justify-center lg:justify-start gap-2 lg:gap-4 mt-4">
+      <div
+        className="flex flex-row lg:w-[200px]
+      lg:flex-col justify-center lg:justify-start gap-2 
+      lg:gap-4 mt-4"
+      >
         <Button className="movie-card-like_btn">
           <span className="hidden sm:inline pr-1">Like Movie</span>
           <Image
@@ -157,22 +161,22 @@ const MovieCard = ({ movie }: { movie: Props }) => {
             height={20}
           />
         </Button>
-        {/* <Button className="movie-card-review_btn"> */}
-        <Link
-          className="movie-card-review_btn"
-          href={`/review/new/${movie.tmdbID}`}
-          passHref
-        >
-          <span className="hidden sm:inline pr-1">Leave Review</span>
+        <Button className="movie-card-review_btn">
+          <Link
+            href={`/review/new/${movie.tmdbID}`}
+            className="flex flex-row"
+            passHref
+          >
+            <span className="hidden sm:inline pr-1">Leave Review</span>
 
-          <Image
-            src="/assets/pen-solid.svg"
-            alt="pen_icon"
-            width={20}
-            height={20}
-          />
-        </Link>
-        {/* </Button> */}
+            <Image
+              src="/assets/pen-solid.svg"
+              alt="pen_icon"
+              width={20}
+              height={20}
+            />
+          </Link>
+        </Button>
         <Button className="movie-card-list_btn">
           <span className="hidden sm:inline pr-1">Make List</span>
           <Image

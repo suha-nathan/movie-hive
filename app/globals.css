@@ -108,7 +108,7 @@ html {
     @apply h-auto min-w-[74px] rounded-lg bg-primary-500 text-[13px] text-light-1 !important;
   }
   .movie-card-review_btn {
-    @apply h-auto min-w-[74px] rounded-lg bg-blue text-[13px] text-light-1 !important;
+    @apply h-auto rounded-lg bg-blue text-[13px] text-light-1 !important;
   }
   .movie-card-list_btn {
     @apply h-auto min-w-[74px] rounded-lg bg-secondary-500 text-[13px] text-light-1 !important;
@@ -142,7 +142,7 @@ html {
   }
 
   .searchbar {
-    @apply flex gap-1 rounded-lg bg-dark-3 px-4 py-2;
+    @apply flex gap-1 rounded-lg bg-dark-3 px-4 py-2 mt-8;
   }
 
   .searchbar_input {

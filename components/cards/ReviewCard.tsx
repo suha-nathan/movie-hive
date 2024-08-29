@@ -40,7 +40,7 @@ function ReviewCard({ review }: { review: Review }) {
           width={130}
           height={217}
           src={`${review.movie.poster}`}
-          alt="Your alt text"
+          alt="movie poster"
         />
       </Link>
       <Link href={`/review/${review._id}`}>
