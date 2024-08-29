@@ -68,29 +68,44 @@ export async function fetchListsBySearch({
             { description: { $regex: regexQuery } },
             { "creatorDetails.username": { $regex: regexQuery } },
             { "movieDetails.title": { $regex: regexQuery } },
+            { "movieDetails.genre": { $regex: regexQuery } },
           ],
         },
       },
       // Pagination stages
       { $skip: skipAmount },
       { $limit: pageSize },
-    ]);
+    ]).exec();
 
-    //count the total number of movies without limit of pagination
-    const totalMoviesCount = await List.countDocuments({
+    //remove unnecessary fields and flatten creatorDetails array
+    const reshapedLists = lists.map((list) => ({
+      ...list,
+      creator: list.creatorDetails[0], // Flatten array to single object
+      movies: list.movieDetails.map((movie: any) => ({ poster: movie.poster })), // filter only the poster field
+    }));
+
+    // Clean up unnecessary fields
+    reshapedLists.forEach((list) => {
+      delete list.creatorDetails;
+      delete list.movieDetails;
+    });
+
+    //count the total number of Lists without limit of pagination
+    const totalListsCount = await List.countDocuments({
       $or: [
         { title: { $regex: regexQuery } },
         { description: { $regex: regexQuery } },
         { "creatorDetails.username": { $regex: regexQuery } },
         { "movieDetails.title": { $regex: regexQuery } },
+        { "movieDetails.genre": { $regex: regexQuery } },
       ],
     });
 
-    const isNext = totalMoviesCount > skipAmount + lists.length;
+    const isNext = totalListsCount > skipAmount + lists.length;
 
-    return { lists, isNext };
+    return { lists: reshapedLists, isNext };
   } catch (error: any) {
     console.error("ERROR fetching lists: ", error.message);
-    return { lists:[], isNext: false };
+    return { lists: [], isNext: false };
   }
 }

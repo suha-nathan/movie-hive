@@ -6,7 +6,6 @@ interface Props {
   description: string;
   creator: { _id: string; image: string; username: string };
   movies: { poster: string }[];
-  comments: string[];
 }
 
 function ListCarousel({ lists }: { lists: Props[] }) {
