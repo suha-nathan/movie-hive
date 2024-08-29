@@ -81,11 +81,12 @@ export async function fetchMoviesBySearch({
 
     const query: FilterQuery<typeof Movie> = {};
 
-    //if searchString is nonempty, match either username or name
+    //if searchString is nonempty, match movie title
     if (searchString.trim() !== "") {
       query.$or = [
-        { username: { $regex: regexQuery } },
-        { name: { $regex: regexQuery } },
+        { title: { $regex: regexQuery } },
+        { director: { $regex: regexQuery } },
+        { genres: { $regex: regexQuery } },
       ];
     }
 
@@ -104,6 +105,7 @@ export async function fetchMoviesBySearch({
     return { movies, isNext };
   } catch (error: any) {
     console.error("ERROR fetching movies: ", error.message);
+    return { movies: [], isNext: false };
   }
 }
 
