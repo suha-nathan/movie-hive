@@ -29,17 +29,6 @@ import * as z from "zod";
 import { usePathname, useRouter } from "next/navigation";
 import { reviewValidation } from "@/lib/validations/review";
 
-interface Props {
-  user: {
-    id: string;
-    objectId: string;
-    username: string;
-    name: string;
-    bio: string;
-    image: string;
-  };
-  btnTitle: string;
-}
 const CreateReview = ({
   userId,
   movieId,
@@ -55,22 +44,14 @@ const CreateReview = ({
     defaultValues: {
       title: "",
       text: "",
-      dateWatched: null,
+      dateWatched: new Date(),
       isSpoiler: false,
-      tags: [],
-      movie: movieId,
-      reviewer: userId,
-      numStars: 1,
+      numStars: "1",
     },
   });
   const onSubmit = async (values: z.infer<typeof reviewValidation>) => {
-    // await createComment({
-    //   text: values.comment,
-    //   commenter: userId,
-    //   communityId: organization ? organization.id : null,
-    //   path: pathname,
-    // });
-    router.push("/");
+    console.log("VALUES: ", values);
+    // router.push("/");
   };
   return (
     <Form {...form}>
@@ -183,8 +164,8 @@ const CreateReview = ({
               <FormControl>
                 <Input
                   type="number"
-                  min="1"
-                  max="5"
+                  min={1}
+                  max={5}
                   className="account-form_input no-focus"
                   {...field}
                 />
@@ -193,6 +174,7 @@ const CreateReview = ({
             </FormItem>
           )}
         />
+        <div id="calendar-pose"></div>
         <Button type="submit" className="bg-primary-500">
           Create Review
         </Button>
