@@ -1,11 +1,11 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useTruncatedElement } from "@/lib/utils";
+import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
 
 interface Props {
   tmdbID: number;
@@ -19,33 +19,6 @@ interface Props {
   genres: [string];
   releaseDate: Date;
 }
-
-const useTruncatedElement = ({
-  ref,
-}: {
-  ref: React.RefObject<HTMLParagraphElement | HTMLDivElement>;
-}) => {
-  const [isTruncated, setIsTruncated] = useState(false);
-  const [isShowingMore, setIsShowingMore] = useState(false);
-
-  useLayoutEffect(() => {
-    const { offsetHeight, scrollHeight } = ref.current || {};
-
-    if (offsetHeight && scrollHeight && offsetHeight < scrollHeight) {
-      setIsTruncated(true);
-    } else {
-      setIsTruncated(false);
-    }
-  }, [ref]);
-
-  const toggleIsShowingMore = () => setIsShowingMore((prev) => !prev);
-
-  return {
-    isTruncated,
-    isShowingMore,
-    toggleIsShowingMore,
-  };
-};
 
 const MovieCard = ({ movie }: { movie: Props }) => {
   const ref = useRef<HTMLParagraphElement>(null);

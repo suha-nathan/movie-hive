@@ -63,3 +63,27 @@ export async function fetchReviewsByMovie(movieId: string) {
     return [];
   }
 }
+
+export async function fetchReviewByID(id: string) {
+  try {
+    connectToDB();
+    const review = await Review.findById(id)
+      .populate({
+        path: "reviewer",
+        select: "_id username image",
+      })
+      .populate({
+        path: "movie",
+        select: "_id tmdbID title releaseDate poster",
+      });
+    // .populate({
+    //   path: "comments",
+    //   select: "_id"
+    // })
+
+    return review;
+  } catch (error: any) {
+    console.error("ERROR fetching reviews: ", error.message);
+    return {};
+  }
+}
