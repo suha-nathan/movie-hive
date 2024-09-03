@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -7,8 +5,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { fetchUser } from "@/lib/actions/user.actions";
 
 import { Button } from "@/components/ui/button";
-import { useTruncatedElement } from "@/lib/utils";
-import { useRef } from "react";
+
 import { fetchReviewByID } from "@/lib/actions/review.action";
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -20,13 +17,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   if (!userInfo.onboarded) redirect("/onboarding");
 
   const review = await fetchReviewByID(params.id);
-
-  const ref = useRef<HTMLParagraphElement>(null);
-
-  const { isTruncated, isShowingMore, toggleIsShowingMore } =
-    useTruncatedElement({
-      ref,
-    });
 
   return (
     <div className="mx-auto">
