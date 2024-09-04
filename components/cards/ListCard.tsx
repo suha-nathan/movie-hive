@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface Props {
+  _id: string;
   title: string;
   description: string;
   creator: { _id: string; image: string; username: string };
@@ -11,7 +12,7 @@ interface Props {
 function ListCard({ list }: { list: Props }) {
   return (
     <div className="flex w-48 flex-col">
-      <div className="flex items-center relative">
+      <Link className="flex items-center relative" href={`/lists/${list._id}`}>
         <Image
           src={list.movies[1].poster}
           alt="movie_poster_0"
@@ -33,7 +34,7 @@ function ListCard({ list }: { list: Props }) {
           height={259}
           className="relative z-10 -left-56 w-auto h-[259px] rounded-xl"
         />
-      </div>
+      </Link>
       <div className="h-14 w-72 mt-4">
         <h4 className="text-light-1 text-left text-base-medium mb-2">
           {list.title}

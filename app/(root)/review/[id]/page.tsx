@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   //fetch comments by review
 
   return (
-    <div className="mx-auto ">
+    <div className="mx-auto">
       <ReviewDetailsCard
         review={{
           _id: review._id.toString(),

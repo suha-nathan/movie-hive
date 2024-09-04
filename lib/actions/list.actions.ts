@@ -109,3 +109,19 @@ export async function fetchListsBySearch({
     return { lists: [], isNext: false };
   }
 }
+
+export async function fetchListByID(id: string) {
+  try {
+    connectToDB();
+
+    const result = await List.findById(id)
+      .populate({ path: "movies", select: "poster tmdbID title releaseDate" })
+      .populate({ path: "creator", select: "_id username image" })
+      .populate("comments");
+
+    return result;
+  } catch (error: any) {
+    console.error("ERROR fetching lists: ", error.message);
+    return [];
+  }
+}

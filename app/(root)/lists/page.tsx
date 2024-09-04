@@ -59,6 +59,7 @@ async function Page({
                 <Link href={`/lists/${list._id.toString()}`}>
                   <ListCard
                     list={{
+                      _id: list._id.toString(),
                       title: list.title,
                       description: list.description,
                       creator: {
