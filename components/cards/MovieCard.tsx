@@ -1,6 +1,6 @@
 "use client";
 
-import { useTruncatedElement } from "@/lib/utils";
+import { useTruncatedElement } from "@/lib/client-utlis";
 import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -31,7 +31,7 @@ const MovieCard = ({ movie }: { movie: Props }) => {
     ref: ref2,
   });
   return (
-    <section className="mt-9 flex flex-col lg:flex-row ">
+    <section className="mt-9 flex flex-col lg:flex-row">
       {/* ---------------Poster--------------- */}
       <div className="flex flex-col md:flex-row gap-3 px-8">
         <div className="min-h-60 w-[80vw] md:w-[30%] flex justify-center items-start">

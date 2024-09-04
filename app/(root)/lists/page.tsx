@@ -40,7 +40,6 @@ async function Page({
     pageSize: 25,
   });
 
-  console.log(result?.lists);
   return (
     <section>
       <Searchbar routeType="lists" />

@@ -76,14 +76,10 @@ export async function fetchReviewByID(id: string) {
         path: "movie",
         select: "_id tmdbID title releaseDate poster",
       });
-    // .populate({
-    //   path: "comments",
-    //   select: "_id"
-    // })
 
     return review;
   } catch (error: any) {
-    console.error("ERROR fetching reviews: ", error.message);
+    console.error("ERROR fetching review: ", error.message);
     return {};
   }
 }
