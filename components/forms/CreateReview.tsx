@@ -9,6 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import TagsInput from "../shared/TagsInput";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,7 +30,7 @@ import * as z from "zod";
 
 import { usePathname, useRouter } from "next/navigation";
 import { reviewValidation } from "@/lib/validations/review";
-// import { TagsInput } from "../ui/TagsInput";
+import { createReview } from "@/lib/actions/review.action";
 
 const CreateReview = ({
   userId,
@@ -46,6 +47,7 @@ const CreateReview = ({
     defaultValues: {
       title: "",
       text: "",
+      tags: [],
       dateWatched: new Date(),
       isSpoiler: false,
       numStars: "1",
@@ -53,7 +55,17 @@ const CreateReview = ({
   });
   const onSubmit = async (values: z.infer<typeof reviewValidation>) => {
     console.log("VALUES: ", values);
-    // router.push("/");
+    // TODO: implement tags
+    const newReviewID = await createReview({
+      title: values.title,
+      text: values.text,
+      dateWatched: values.dateWatched,
+      isSpoiler: values.isSpoiler ? values.isSpoiler : false,
+      numStars: Number(values.numStars),
+      movie: movieId,
+      reviewer: userId,
+    });
+    router.push(`/review/${newReviewID}`);
   };
   return (
     <Form {...form}>
@@ -66,7 +78,7 @@ const CreateReview = ({
           name="title"
           render={({ field }) => (
             <FormItem className="flex flex-col gap-3 w-full">
-              <FormLabel className="text-base-semibold text-light-2 ">
+              <FormLabel className="text-base-semibold text-light-1">
                 Title
               </FormLabel>
               <FormControl>
@@ -85,7 +97,7 @@ const CreateReview = ({
           name="text"
           render={({ field }) => (
             <FormItem className="flex w-full flex-col gap-3">
-              <FormLabel className="text-base-semibold text-light-2">
+              <FormLabel className="text-base-semibold text-light-1">
                 Content
               </FormLabel>
               <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1">
@@ -99,10 +111,10 @@ const CreateReview = ({
           control={form.control}
           name="isSpoiler"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-dark-4 p-4 shadow">
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 account-form_input">
               <FormControl>
                 <Checkbox
-                  className="bg-white"
+                  className="border border-light-1"
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
@@ -118,14 +130,16 @@ const CreateReview = ({
           name="dateWatched"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Date Watched</FormLabel>
+              <FormLabel className="text-base-semibold text-light-1">
+                Date Watched
+              </FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
+                        "w-[240px] pl-3 text-left font-normal border border-dark-4 bg-dark-3 text-light-1",
                         !field.value && "text-muted-foreground"
                       )}
                     >
@@ -160,7 +174,7 @@ const CreateReview = ({
           name="numStars"
           render={({ field }) => (
             <FormItem className="flex flex-col gap-3 w-full">
-              <FormLabel className="text-base-semibold text-light-2 ">
+              <FormLabel className="text-base-semibold text-light-1">
                 Rating
               </FormLabel>
               <FormControl>
@@ -177,12 +191,12 @@ const CreateReview = ({
           )}
         />
         <div id="calendar-pose"></div>
-        {/* <FormField
+        <FormField
           control={form.control}
-          name="numStars"
+          name="tags"
           render={({ field }) => (
-            <FormItem className="flex flex-col gap-3 w-full">
-              <FormLabel className="text-base-semibold text-light-2 ">
+            <FormItem className="flex flex-col gap-3 w-full ">
+              <FormLabel className="text-base-semibold text-light-1 ">
                 Tags
               </FormLabel>
               <FormControl>
@@ -195,8 +209,8 @@ const CreateReview = ({
               <FormMessage />
             </FormItem>
           )}
-        /> */}
-        <Button type="submit" className="bg-primary-500">
+        />
+        <Button type="submit" className="bg-primary-500 hover:bg-slate-500">
           Create Review
         </Button>
       </form>

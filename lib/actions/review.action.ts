@@ -2,6 +2,7 @@
 
 import { connectToDB } from "../mongoose";
 import Review from "../models/review.model";
+import User from "../models/user.model";
 
 export async function fetchReviews() {
   try {
@@ -80,6 +81,51 @@ export async function fetchReviewByID(id: string) {
     return review;
   } catch (error: any) {
     console.error("ERROR fetching review: ", error.message);
+    return {};
+  }
+}
+
+interface Params {
+  title: string;
+  text: string;
+  dateWatched: Date;
+  isSpoiler: boolean;
+  tags?: [string];
+  movie: string;
+  reviewer: string;
+  numStars: number;
+}
+
+export async function createReview({
+  title,
+  text,
+  dateWatched,
+  isSpoiler,
+  tags,
+  movie,
+  reviewer,
+  numStars,
+}: Params) {
+  try {
+    connectToDB();
+    const createdReview = await Review.create({
+      title,
+      text,
+      dateWatched,
+      isSpoiler,
+      tags,
+      movie,
+      reviewer,
+      numStars,
+    });
+    //update user model with review
+    await User.findByIdAndUpdate(reviewer, {
+      $push: { reviews: createdReview._id },
+    });
+    console.log(createdReview);
+    return createdReview._id.toString();
+  } catch (error: any) {
+    console.error("ERROR creating review: ", error.message);
     return {};
   }
 }
