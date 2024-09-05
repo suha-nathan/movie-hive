@@ -6,10 +6,19 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-export default function TagsInput() {
-  const [tags, setTags] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState("");
+interface ChildComponentProps {
+  tags: string[];
+  setTags: React.Dispatch<React.SetStateAction<string[]>>;
+  inputValue: string;
+  setInputValue: React.Dispatch<React.SetStateAction<string>>;
+}
 
+const TagsInput: React.FC<ChildComponentProps> = ({
+  tags,
+  setTags,
+  inputValue,
+  setInputValue,
+}) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
@@ -35,9 +44,9 @@ export default function TagsInput() {
   };
 
   return (
-    // max-w-md
     <div className="w-full mx-auto space-y-4">
-      <div className="flex flex-wrap gap-2 h-6">
+      <div className="flex flex-row flex-wrap gap-2 h-8 items-center">
+        <div className="text-base-semibold text-light-1 mr-4">Tags</div>
         {tags.map((tag) => (
           <Badge key={tag} variant="secondary" className="text-sm">
             {tag}
@@ -63,14 +72,15 @@ export default function TagsInput() {
           className="flex-grow account-form_input no-focus"
           aria-label="Enter a tag"
         />
-        <Button
+        {/* <Button
           onClick={() => addTag(inputValue)}
           disabled={!inputValue.trim()}
           className="bg-primary-500 hover:bg-slate-500"
         >
           Add Tag
-        </Button>
+        </Button> */}
       </div>
     </div>
   );
-}
+};
+export default TagsInput;

@@ -1,9 +1,8 @@
 "use client";
-
+import { useState } from "react";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -35,32 +34,34 @@ import { createReview } from "@/lib/actions/review.action";
 const CreateReview = ({
   userId,
   movieId,
+  className,
 }: {
   userId: string;
   movieId: string;
+  className: string;
 }) => {
   const router = useRouter();
   const pathname = usePathname();
+  const [tags, setTags] = useState<string[]>([]);
+  const [inputValue, setInputValue] = useState("");
 
   const form = useForm({
     resolver: zodResolver(reviewValidation),
     defaultValues: {
       title: "",
       text: "",
-      tags: [],
       dateWatched: new Date(),
       isSpoiler: false,
       numStars: "1",
     },
   });
   const onSubmit = async (values: z.infer<typeof reviewValidation>) => {
-    console.log("VALUES: ", values);
-    // TODO: implement tags
     const newReviewID = await createReview({
       title: values.title,
       text: values.text,
+      tags: tags,
       dateWatched: values.dateWatched,
-      isSpoiler: values.isSpoiler ? values.isSpoiler : false,
+      isSpoiler: values.isSpoiler,
       numStars: Number(values.numStars),
       movie: movieId,
       reviewer: userId,
@@ -70,7 +71,7 @@ const CreateReview = ({
   return (
     <Form {...form}>
       <form
-        className="mt-10 flex flex-col justify-start gap-10"
+        className={`flex flex-col justify-start gap-10 ${className}`}
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
@@ -165,6 +166,7 @@ const CreateReview = ({
                 </PopoverContent>
               </Popover>
               <FormMessage />
+              <div id="calendar-pose"></div>
             </FormItem>
           )}
         />
@@ -190,25 +192,12 @@ const CreateReview = ({
             </FormItem>
           )}
         />
-        <div id="calendar-pose"></div>
-        <FormField
-          control={form.control}
-          name="tags"
-          render={({ field }) => (
-            <FormItem className="flex flex-col gap-3 w-full ">
-              <FormLabel className="text-base-semibold text-light-1 ">
-                Tags
-              </FormLabel>
-              <FormControl>
-                <TagsInput
-                  type="text"
-                  className="account-form_input no-focus"
-                  // {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+
+        <TagsInput
+          tags={tags}
+          setTags={setTags}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
         />
         <Button type="submit" className="bg-primary-500 hover:bg-slate-500">
           Create Review

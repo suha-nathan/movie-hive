@@ -12,16 +12,16 @@ const reviewSchema = new mongoose.Schema(
     tags: [String],
     movie: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "movie",
+      ref: "Movie",
     },
     reviewer: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ref: "User",
     },
     comments: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "comment",
+        ref: "Comment",
       },
     ],
     numStars: Number,

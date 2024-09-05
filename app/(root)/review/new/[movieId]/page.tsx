@@ -20,6 +20,7 @@ async function Page({ params }: { params: { movieId: string } }) {
     <CreateReview
       userId={userInfo._id.toString()}
       movieId={movieInfo._id.toString()}
+      className="mt-10"
     />
   );
 }

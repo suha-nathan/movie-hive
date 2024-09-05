@@ -78,6 +78,7 @@ export async function fetchReviewByID(id: string) {
         select: "_id tmdbID title releaseDate poster",
       });
 
+    console.log(review);
     return review;
   } catch (error: any) {
     console.error("ERROR fetching review: ", error.message);
@@ -90,7 +91,7 @@ interface Params {
   text: string;
   dateWatched: Date;
   isSpoiler: boolean;
-  tags?: [string];
+  tags?: string[] | null;
   movie: string;
   reviewer: string;
   numStars: number;
@@ -122,7 +123,7 @@ export async function createReview({
     await User.findByIdAndUpdate(reviewer, {
       $push: { reviews: createdReview._id },
     });
-    console.log(createdReview);
+
     return createdReview._id.toString();
   } catch (error: any) {
     console.error("ERROR creating review: ", error.message);

@@ -6,19 +6,19 @@ const listSchema = new mongoose.Schema(
     description: { type: String, required: true },
     creator: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ref: "User",
       required: true,
     },
     movies: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "movie",
+        ref: "Movie",
       },
     ],
     comments: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "comment",
+        ref: "Comment",
       },
     ],
   },

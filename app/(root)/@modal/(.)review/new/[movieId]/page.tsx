@@ -27,6 +27,7 @@ export default async function Page({
       <CreateReview
         userId={userInfo._id.toString()}
         movieId={movieInfo._id.toString()}
+        className="mt-2"
       />
     </Modal>
   );

@@ -14,8 +14,9 @@ export default async function Page({ params }: { params: { id: string } }) {
   if (!userInfo.onboarded) redirect("/onboarding");
 
   const review = await fetchReviewByID(params.id);
-  // console.log("REVIEW", review);
+  console.log("REVIEW", review);
   //fetch comments by review
+  if (!review) redirect("/");
 
   return (
     <div className="mx-auto">

@@ -6,7 +6,6 @@ export const reviewValidation = z.object({
   dateWatched: z.date({
     required_error: "A watch date is required.",
   }),
-  isSpoiler: z.boolean().default(false).optional(),
-  tags: z.string().array(),
+  isSpoiler: z.boolean().default(false),
   numStars: z.string(),
 });
