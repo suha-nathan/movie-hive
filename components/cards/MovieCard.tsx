@@ -151,13 +151,15 @@ const MovieCard = ({ movie }: { movie: Props }) => {
           </Link>
         </Button>
         <Button className="movie-card-list_btn">
-          <span className="hidden sm:inline pr-1">Make List</span>
-          <Image
-            src="/assets/rectangle-list-regular.svg"
-            alt="list_icon"
-            width={20}
-            height={20}
-          />
+          <Link href="/lists/new" className="flex flex-row" passHref>
+            <span className="hidden sm:inline pr-1">Make List</span>
+            <Image
+              src="/assets/rectangle-list-regular.svg"
+              alt="list_icon"
+              width={20}
+              height={20}
+            />
+          </Link>
         </Button>
       </div>
     </section>

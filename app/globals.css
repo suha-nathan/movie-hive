@@ -7,7 +7,7 @@
   /* main */
   .main-container {
     @apply flex min-h-screen flex-1 flex-col items-center bg-dark-1 
-    px-0 pb-10 pt-[4rem] max-md:pb-32 sm:px-10 ;
+    px-0 pb-10 pt-[4rem] max-md:pb-32 max-md:px-8 sm:px-10 ;
   }
 
   /* Head Text */
@@ -89,7 +89,7 @@
   }
 
   .bottombar {
-    @apply fixed bottom-0 z-30 w-full rounded-t-3xl bg-glassmorphism p-4 backdrop-blur-lg xs:px-7 md:hidden;
+    @apply fixed bottom-0 z-30 w-full rounded-t-3xl bg-glassmorphism p-4 backdrop-blur-lg xs:px-7 lg:hidden;
   }
 
   .bottombar_container {
@@ -102,7 +102,7 @@
 
   .leftsidebar {
     @apply sticky left-0 top-0 z-20 flex h-screen w-fit flex-col justify-between overflow-auto 
-    border-r border-r-dark-4 bg-dark-2 pb-5 pt-24 max-md:hidden;
+    border-r border-r-dark-4 bg-dark-2 pb-5 pt-24 max-lg:hidden;
   }
 
   .leftsidebar_link {

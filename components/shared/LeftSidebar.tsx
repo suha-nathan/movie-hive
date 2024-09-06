@@ -30,7 +30,7 @@ function LeftSidebar() {
                 width={24}
                 height={24}
               />
-              <p className="text-light-1 max-lg:hidden">{link.label}</p>
+              <p className="text-light-1 max-xl:hidden">{link.label}</p>
             </Link>
           );
         })}
@@ -38,14 +38,14 @@ function LeftSidebar() {
       <div className="mt-10 px-6">
         <SignedIn>
           <SignOutButton redirectUrl="/sign-in">
-            <div className="flex cursor-pointer gap-4 p-4">
+            <div className="flex cursor-pointer gap-4 p-4 max-xl:hidden">
               <Image
                 src="/assets/logout.svg"
                 alt="logout"
                 width={24}
                 height={24}
               />
-              <p className="text-light-2 max-lg:hidden">Logout</p>
+              <p className="text-light-2">Logout</p>
             </div>
           </SignOutButton>
         </SignedIn>

@@ -29,11 +29,11 @@ async function Page({ params }: { params: { id: string } }) {
       <MovieCard movie={movie} />
 
       {/* Recent reviews */}
-      <CarouselHeader headerTitle="Recent Reviews" style="mt-4" />
+      <CarouselHeader headerTitle="Recent Reviews" style="mt-4 mb-4 px-8" />
       <MovieReviews reviews={reviews} />
 
       <div>{/* Popular Lists */}</div>
-      <CarouselHeader headerTitle="Included in Lists" style="mt-4" />
+      <CarouselHeader headerTitle="Included in Lists" style="mt-4 mb-4 px-8" />
     </div>
   );
 }

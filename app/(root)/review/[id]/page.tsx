@@ -42,7 +42,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           },
         }}
       />
-      <CarouselHeader headerTitle="Comments" style="mt-4" />
+      <CarouselHeader headerTitle="Comments" style="mt-4 mb-4 px-8" />
     </div>
   );
 }

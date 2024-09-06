@@ -1,9 +1,11 @@
 import { Types } from "mongoose";
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs/server";
 
+import { Button } from "@/components/ui/button";
 import CarouselHeader from "@/components/shared/CarouselHeader";
 import ListCard from "@/components/cards/ListCard";
 import Searchbar from "@/components/shared/Searchbar";
@@ -43,11 +45,32 @@ async function Page({
   return (
     <section>
       <Searchbar routeType="lists" />
-      <div className="mt-14 flex flex-col gap-9">
+      <div className="mt-14 flex flex-col gap-9 max-w-[600px]">
         {result?.lists?.length === 0 ? (
-          <p className="no-result">
-            Search for a lists by title, genre, movie, or user
-          </p>
+          <>
+            <p className="no-result py-auto">
+              Search for a lists by title, genre, movie, or user
+            </p>
+            <div className="flex flex-row sm:w-[80vw] justify-between items-end">
+              <CarouselHeader
+                headerTitle="Popular Lists"
+                underlineStyle="w-48 sm:w-96"
+              />
+              <Button className="h-auto rounded-lg bg-secondary-500 text-[13px] text-light-1 ">
+                <Link href="/lists/new" className="flex flex-row" passHref>
+                  <span className="hidden sm:inline pr-1">
+                    Make Your Own List
+                  </span>
+                  <Image
+                    src="/assets/rectangle-list-regular.svg"
+                    alt="list_icon"
+                    width={20}
+                    height={20}
+                  />
+                </Link>
+              </Button>
+            </div>
+          </>
         ) : (
           <>
             <CarouselHeader headerTitle={`Results for ${searchParams.q}`} />

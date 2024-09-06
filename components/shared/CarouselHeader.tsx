@@ -2,15 +2,19 @@ import React from "react";
 
 function CarouselHeader({
   headerTitle,
-  style,
+  style = "",
+  underlineStyle = "w-[30vw]",
 }: {
   headerTitle: string;
   style?: string;
+  underlineStyle?: string;
 }) {
   return (
-    <div className={`mb-4 flex flex-col items-start ${style}`}>
+    <div className={`flex flex-col items-start ${style}`}>
       <div className="sub-head-text">{headerTitle}</div>
-      <div className="relative h-0.5 w-[80vw] sm:w-[40vw] grow rounded-full  bg-light-4" />
+      <div
+        className={`relative h-0.5 grow rounded-full  bg-light-4 ${underlineStyle}`}
+      />
     </div>
   );
 }
