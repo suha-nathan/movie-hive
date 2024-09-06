@@ -8,28 +8,23 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import TagsInput from "../shared/TagsInput";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Checkbox } from "../ui/checkbox";
-import { Calendar } from "../ui/calendar";
-import { CalendarIcon } from "@radix-ui/react-icons";
 
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { usePathname, useRouter } from "next/navigation";
-import { reviewValidation } from "@/lib/validations/review";
-import { createReview } from "@/lib/actions/review.action";
+import { listValidation } from "@/lib/validations/list";
+
+interface MovieProps {
+  _id: string;
+  poster: string;
+  title: string;
+}
 
 const CreateList = ({
   userId,
@@ -40,20 +35,50 @@ const CreateList = ({
 }) => {
   const router = useRouter();
   const pathname = usePathname();
-  const [tags, setTags] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState("");
+  const [searchResults, setSearchResults] = useState<MovieProps[]>([]);
+  const [searchString, setSearchString] = useState("");
 
-  const form = useForm({
-    resolver: zodResolver(reviewValidation),
+  const handleSearch = async () => {
+    try {
+      const response = await fetch(
+        `/api/movies/search?searchString=${searchString}`
+      );
+      const data = await response.json();
+      console.log("API DATA: ", data);
+      setSearchResults(
+        data.movies.map((movie: any) => ({
+          _id: movie._id.toString(),
+          poster: movie.poster,
+          title: movie.title,
+        }))
+      );
+    } catch (error) {
+      console.error("ERROR: fetching movies: ", error);
+    }
+  };
+
+  type FormValues = {
+    title: string;
+    description: string;
+    movies: string[];
+  };
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(listValidation),
     defaultValues: {
       title: "",
-      text: "",
-      dateWatched: new Date(),
-      isSpoiler: false,
-      numStars: "1",
+      description: "",
+      movies: [],
     },
   });
-  const onSubmit = async (values: z.infer<typeof reviewValidation>) => {
+
+  const { control, handleSubmit, register } = form;
+
+  const { fields, append, remove } = useFieldArray({ control, name: "movies" });
+
+  const onSubmit = async (values: z.infer<typeof listValidation>) => {
+    console.log("FORM DATA: ", values);
+
     // const newReviewID = await createReview({
     //   title: values.title,
     //   text: values.text,
@@ -70,7 +95,7 @@ const CreateList = ({
     <Form {...form}>
       <form
         className={`flex flex-col justify-start gap-10 ${className}`}
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <FormField
           control={form.control}
@@ -93,11 +118,11 @@ const CreateList = ({
         />
         <FormField
           control={form.control}
-          name="text"
+          name="description"
           render={({ field }) => (
             <FormItem className="flex w-full flex-col gap-3">
               <FormLabel className="text-base-semibold text-light-1">
-                Content
+                Description
               </FormLabel>
               <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1">
                 <Textarea rows={5} {...field} />
@@ -106,99 +131,58 @@ const CreateList = ({
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="isSpoiler"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 account-form_input">
-              <FormControl>
-                <Checkbox
-                  className="border border-light-1"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <FormLabel className="text-light-1">
-                does your review contain spoilers?
-              </FormLabel>
-            </FormItem>
-          )}
+        <Input
+          type="text"
+          className="account-form_input no-focus"
+          onChange={(e) => setSearchString(e.target.value)}
+          placeholder="Search for Movies..."
         />
-        <FormField
-          control={form.control}
-          name="dateWatched"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel className="text-base-semibold text-light-1">
-                Date Watched
-              </FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] pl-3 text-left font-normal border border-dark-4 bg-dark-3 text-light-1",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 " align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-              <div id="calendar-pose"></div>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="numStars"
-          render={({ field }) => (
-            <FormItem className="flex flex-col gap-3 w-full">
-              <FormLabel className="text-base-semibold text-light-1">
-                Rating
-              </FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  min={1}
-                  max={5}
-                  className="account-form_input no-focus"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <TagsInput
-          tags={tags}
-          setTags={setTags}
-          inputValue={inputValue}
-          setInputValue={setInputValue}
-        />
+        <button className="bg-green-700 text-light-1" onClick={handleSearch}>
+          Search
+        </button>
+        <h2 className="text">Searched Movies</h2>
+        <div className="h-32 flex flex-row gap-2">
+          {searchResults.map((movie) => (
+            <div key={movie._id}>
+              <img
+                src={movie.poster}
+                alt={movie.title}
+                height={100}
+                width={100}
+              />
+              <button
+                type="button"
+                onClick={() => append(movie._id)}
+                className="text-light-1 bg-green-700 p-2 text-subtle-medium"
+              >
+                Add {movie.title}
+              </button>
+            </div>
+          ))}
+        </div>
+        <h2 className="text-light-1">Selected Movies</h2>
+        <div className="h-32 flex flex-row">
+          {/* Display selected movies */}
+          {fields.map((field, index) => (
+            <div key={field.id}>
+              <input
+                type="hidden"
+                {...register(`movies.${index}`)}
+                defaultValue={field.id}
+              />
+              <p className="text-light-1">Movie ID: {field.id}</p>
+              <button
+                type="button"
+                onClick={() => remove(index)}
+                className="text-light-1 bg-red-700 p-2 text-subtle-medium"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
         <Button type="submit" className="bg-primary-500 hover:bg-slate-500">
-          Create Review
+          Publish List
         </Button>
       </form>
     </Form>
