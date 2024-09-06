@@ -2,11 +2,12 @@
 
 import { connectToDB } from "../mongoose";
 import List from "../models/list.model";
+import User from "../models/user.model";
 import { SortOrder, FilterQuery } from "mongoose";
 
 export async function fetchLists() {
   try {
-    connectToDB();
+    await connectToDB();
 
     const results = await List.find({})
       .populate({ path: "movies", select: "poster title releaseDate" })
@@ -21,6 +22,7 @@ export async function fetchLists() {
   }
 }
 
+// TODO: order of results changes need to fix
 export async function fetchListsBySearch({
   searchString = "",
   pageNumber = 1,
@@ -33,7 +35,7 @@ export async function fetchListsBySearch({
   sortBy?: SortOrder;
 }) {
   try {
-    connectToDB();
+    await connectToDB();
 
     if (!searchString) return { lists: [], isNext: false };
 
@@ -112,7 +114,7 @@ export async function fetchListsBySearch({
 
 export async function fetchListByID(id: string) {
   try {
-    connectToDB();
+    await connectToDB();
 
     const result = await List.findById(id)
       .populate({ path: "movies", select: "poster tmdbID title releaseDate" })
@@ -123,5 +125,38 @@ export async function fetchListByID(id: string) {
   } catch (error: any) {
     console.error("ERROR fetching lists: ", error.message);
     return [];
+  }
+}
+
+export async function createList({
+  title,
+  description,
+  movies,
+  creator,
+}: {
+  title: string;
+  description: string;
+  movies: string[];
+  creator: string;
+}) {
+  try {
+    await connectToDB();
+
+    const createdList = await List.create({
+      title,
+      description,
+      creator,
+      movies,
+    });
+
+    //update user model with new list
+    await User.findByIdAndUpdate(creator, {
+      $push: { lists: createdList._id },
+    });
+
+    return createdList._id.toString();
+  } catch (error: any) {
+    console.error("ERROR creating review: ", error.message);
+    return {};
   }
 }

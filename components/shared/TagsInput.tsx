@@ -45,8 +45,17 @@ const TagsInput: React.FC<ChildComponentProps> = ({
 
   return (
     <div className="w-full mx-auto space-y-4">
-      <div className="flex flex-row flex-wrap gap-2 h-8 items-center">
+      <div className="flex flex-row flex-wrap gap-2 min-h-[2rem] items-center">
         <div className="text-base-semibold text-light-1 mr-4">Tags</div>
+        <Input
+          type="text"
+          placeholder="Enter a tag"
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleInputKeyDown}
+          className="flex-grow account-form_input no-focus"
+          aria-label="Enter a tag"
+        />
         {tags.map((tag) => (
           <Badge key={tag} variant="secondary" className="text-sm">
             {tag}
@@ -61,24 +70,6 @@ const TagsInput: React.FC<ChildComponentProps> = ({
             </Button>
           </Badge>
         ))}
-      </div>
-      <div className="flex gap-2">
-        <Input
-          type="text"
-          placeholder="Enter a tag"
-          value={inputValue}
-          onChange={handleInputChange}
-          onKeyDown={handleInputKeyDown}
-          className="flex-grow account-form_input no-focus"
-          aria-label="Enter a tag"
-        />
-        {/* <Button
-          onClick={() => addTag(inputValue)}
-          disabled={!inputValue.trim()}
-          className="bg-primary-500 hover:bg-slate-500"
-        >
-          Add Tag
-        </Button> */}
       </div>
     </div>
   );

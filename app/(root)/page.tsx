@@ -27,15 +27,21 @@ async function Home() {
 
   return (
     <>
-      <section className="mt-9 flex flex-col">
-        <CarouselHeader headerTitle="Recent Movies" style="mb-4" />
-        <EmblaCarousel slides={latestMovies} options={OPTIONS} />
+      <section className="mt-9 flex flex-col space-y-8">
+        <div>
+          <CarouselHeader headerTitle="Recent Movies" style="mb-4" />
+          <EmblaCarousel slides={latestMovies} options={OPTIONS} />
+        </div>
 
-        <CarouselHeader headerTitle="Popular Lists" style="mb-4" />
-        <ListCarousel lists={lists} />
+        <div>
+          <CarouselHeader headerTitle="Popular Lists" style="mb-4" />
+          <ListCarousel lists={lists} />
+        </div>
 
-        <CarouselHeader headerTitle="Popular Reviews" style="mb-4" />
-        <ReviewSection />
+        <div>
+          <CarouselHeader headerTitle="Popular Reviews" style="mb-4" />
+          <ReviewSection />
+        </div>
       </section>
     </>
   );

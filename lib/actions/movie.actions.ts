@@ -20,7 +20,7 @@ interface Props {
 
 export async function fetchLatestMovies() {
   try {
-    connectToDB();
+    await connectToDB();
     const startDate = new Date("2024-07-01"); //TODO: dynamic value
     const endDate = new Date(); //today's Date
 
@@ -46,7 +46,7 @@ export async function fetchLatestMovies() {
 
 export async function fetchAll() {
   try {
-    connectToDB();
+    await connectToDB();
 
     const results = await Movie.find({}, "_id title");
 
@@ -69,7 +69,7 @@ export async function fetchMoviesBySearch({
   sortBy?: SortOrder;
 }) {
   try {
-    connectToDB();
+    await connectToDB();
 
     if (!searchString) return { movies: [], isNext: false };
 
@@ -109,9 +109,46 @@ export async function fetchMoviesBySearch({
   }
 }
 
+export async function fetchMoviesByTitle({
+  searchString = "",
+  pageSize = 5,
+  sortBy = "desc",
+}: {
+  searchString?: string;
+  pageSize?: number;
+  sortBy?: SortOrder;
+}) {
+  try {
+    await connectToDB();
+
+    if (!searchString) return { movies: [] };
+
+    //case insensitive regex of searchString
+    const regexQuery = new RegExp(searchString, "i");
+
+    const query: FilterQuery<typeof Movie> = {};
+
+    //if searchString is nonempty, match movie title
+    if (searchString.trim() !== "") {
+      query.$or = [{ title: { $regex: regexQuery } }];
+    }
+
+    const sortOptions = { releaseDate: sortBy };
+
+    const moviesQuery = Movie.find(query).sort(sortOptions).limit(pageSize);
+
+    const movies = await moviesQuery.exec();
+
+    return { movies };
+  } catch (error: any) {
+    console.error("ERROR fetching movies: ", error.message);
+    return { movies: [], isNext: false };
+  }
+}
+
 export async function fetchMovieByID(id: string) {
   try {
-    connectToDB();
+    await connectToDB();
     const result = await Movie.find({ tmdbID: id });
 
     return result[0];

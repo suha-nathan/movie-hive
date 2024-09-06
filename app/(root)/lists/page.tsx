@@ -45,7 +45,7 @@ async function Page({
   return (
     <section>
       <Searchbar routeType="lists" />
-      <div className="mt-14 flex flex-col gap-9 max-w-[600px]">
+      <div className="mt-14 flex flex-col gap-9">
         {result?.lists?.length === 0 ? (
           <>
             <p className="no-result py-auto">
@@ -75,8 +75,8 @@ async function Page({
           <>
             <CarouselHeader headerTitle={`Results for ${searchParams.q}`} />
             <div
-              className="grid grid-cols-1 md:grid-cols-2 
-      lg:grid-cols-3 w-full gap-y-10 pb-10"
+              className="grid lg:grid-cols-2 
+      xl:grid-cols-3 w-full gap-y-10 pb-10"
             >
               {result?.lists?.map((list: ListType) => (
                 <Link href={`/lists/${list._id.toString()}`}>

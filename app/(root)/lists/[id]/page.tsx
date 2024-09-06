@@ -60,26 +60,29 @@ async function Page({ params }: { params: { id: string } }) {
       <p className="text-light-1 text-base-medium w-[50vw]">
         {list.description}
       </p>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-        {list.movies.map((movie: any) => (
-          <Link
-            key={movie._id.toString()}
-            href={`/movies/${generateMovieURL({
-              tmdbID: movie.tmdbID,
-              title: movie.title,
-            })}`}
-          >
-            <Image
-              className=""
-              width={130}
-              height={217}
-              src={`${movie.poster}`}
-              alt="movie poster"
-            />
-          </Link>
-        ))}
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 justify-items-center">
+          {list.movies.map((movie: any) => (
+            <Link
+              key={movie._id.toString()}
+              href={`/movies/${generateMovieURL({
+                tmdbID: movie.tmdbID,
+                title: movie.title,
+              })}`}
+              className="transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary rounded-lg overflow-hidden"
+            >
+              <Image
+                className="w-full h-auto rounded-lg shadow-md"
+                width={200}
+                height={300}
+                src={movie.poster}
+                alt={`${movie.title} poster`}
+              />
+            </Link>
+          ))}
+        </div>
       </div>
-      <CarouselHeader headerTitle="Comments" style="mt-4"/>
+      <CarouselHeader headerTitle="Comments" style="mt-4" />
     </div>
   );
 }

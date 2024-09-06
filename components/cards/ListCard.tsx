@@ -36,7 +36,7 @@ function ListCard({ list }: { list: Props }) {
         />
       </Link>
       <div className="h-14 w-72 mt-4">
-        <h4 className="text-light-1 text-left text-base-medium mb-2">
+        <h4 className="text-light-1 text-left text-base-medium mb-2 truncate">
           {list.title}
         </h4>
         <div className="flex flex-row w-full">
@@ -51,7 +51,7 @@ function ListCard({ list }: { list: Props }) {
               width={44}
               className="cursor-pointer rounded-full"
             />
-            <h4 className="cursor-pointer text-base-semibold text-light-1 ml-2">
+            <h4 className="cursor-pointer text-base-semibold text-light-1 ml-2 truncate">
               @{list.creator.username}
             </h4>
           </Link>

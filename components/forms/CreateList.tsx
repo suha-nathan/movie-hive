@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, KeyboardEvent } from "react";
 import {
   Form,
   FormControl,
@@ -8,7 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,6 +19,7 @@ import * as z from "zod";
 
 import { usePathname, useRouter } from "next/navigation";
 import { listValidation } from "@/lib/validations/list";
+import { createList } from "@/lib/actions/list.actions";
 
 interface MovieProps {
   _id: string;
@@ -37,6 +38,7 @@ const CreateList = ({
   const pathname = usePathname();
   const [searchResults, setSearchResults] = useState<MovieProps[]>([]);
   const [searchString, setSearchString] = useState("");
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const handleSearch = async () => {
     try {
@@ -44,7 +46,6 @@ const CreateList = ({
         `/api/movies/search?searchString=${searchString}`
       );
       const data = await response.json();
-      console.log("API DATA: ", data);
       setSearchResults(
         data.movies.map((movie: any) => ({
           _id: movie._id.toString(),
@@ -56,11 +57,18 @@ const CreateList = ({
       console.error("ERROR: fetching movies: ", error);
     }
   };
+  const handleInputKeyDown = async (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchString) {
+      e.preventDefault();
+      await handleSearch();
+      setIsPopoverOpen(true);
+    }
+  };
 
   type FormValues = {
     title: string;
     description: string;
-    movies: string[];
+    movies: { _id: string; poster: string; title: string }[];
   };
 
   const form = useForm<FormValues>({
@@ -76,21 +84,23 @@ const CreateList = ({
 
   const { fields, append, remove } = useFieldArray({ control, name: "movies" });
 
-  const onSubmit = async (values: z.infer<typeof listValidation>) => {
-    console.log("FORM DATA: ", values);
-
-    // const newReviewID = await createReview({
-    //   title: values.title,
-    //   text: values.text,
-    //   tags: tags,
-    //   dateWatched: values.dateWatched,
-    //   isSpoiler: values.isSpoiler,
-    //   numStars: Number(values.numStars),
-    //   movie: movieId,
-    //   reviewer: userId,
-    // });
-    // router.push(`/review/${newReviewID}`);
+  const handleAddMovie = (movie: MovieProps) => {
+    append({ _id: movie._id, poster: movie.poster, title: movie.title });
+    setSearchResults([]);
+    setIsPopoverOpen(false);
   };
+
+  const onSubmit = async (values: z.infer<typeof listValidation>) => {
+    const movieIds = values.movies.map((movie) => movie._id);
+    const newListID = await createList({
+      ...values,
+      movies: movieIds,
+      creator: userId,
+    });
+
+    router.push(`/lists/${newListID}`);
+  };
+
   return (
     <Form {...form}>
       <form
@@ -131,52 +141,65 @@ const CreateList = ({
             </FormItem>
           )}
         />
-        <Input
-          type="text"
-          className="account-form_input no-focus"
-          onChange={(e) => setSearchString(e.target.value)}
-          placeholder="Search for Movies..."
-        />
-        <button className="bg-green-700 text-light-1" onClick={handleSearch}>
-          Search
-        </button>
-        <h2 className="text">Searched Movies</h2>
-        <div className="h-32 flex flex-row gap-2">
-          {searchResults.map((movie) => (
-            <div key={movie._id}>
-              <img
-                src={movie.poster}
-                alt={movie.title}
-                height={100}
-                width={100}
-              />
-              <button
-                type="button"
-                onClick={() => append(movie._id)}
-                className="text-light-1 bg-green-700 p-2 text-subtle-medium"
-              >
-                Add {movie.title}
-              </button>
-            </div>
-          ))}
-        </div>
+        <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+          <PopoverTrigger asChild>
+            <Input
+              type="text"
+              className="account-form_input no-focus"
+              onChange={(e) => setSearchString(e.target.value)}
+              placeholder="Search for Movies..."
+              onKeyDown={handleInputKeyDown}
+            />
+          </PopoverTrigger>
+          <PopoverContent className="w-[400px] p-4">
+            <h3 className="font-medium mb-2">
+              Search Results for: {searchString}
+            </h3>
+            {searchResults.length > 0 ? (
+              <div className="flex flex-row gap-2 flex-wrap">
+                {searchResults.map((movie) => (
+                  <div key={movie._id}>
+                    <button
+                      type="button"
+                      onClick={() => handleAddMovie(movie)}
+                      className=""
+                    >
+                      <img
+                        src={movie.poster}
+                        alt={movie.title}
+                        height={80}
+                        width={80}
+                      />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>No results found. Try a different search term.</p>
+            )}
+          </PopoverContent>
+        </Popover>
+
         <h2 className="text-light-1">Selected Movies</h2>
         <div className="h-32 flex flex-row">
-          {/* Display selected movies */}
           {fields.map((field, index) => (
-            <div key={field.id}>
+            <div key={field._id} className="relative p-2">
               <input
                 type="hidden"
                 {...register(`movies.${index}`)}
                 defaultValue={field.id}
               />
-              <p className="text-light-1">Movie ID: {field.id}</p>
+              <img
+                src={field.poster}
+                alt={field.title}
+                className="h-32 w-auto object-cover"
+              />
               <button
                 type="button"
                 onClick={() => remove(index)}
-                className="text-light-1 bg-red-700 p-2 text-subtle-medium"
+                className="absolute top-0 right-0 bg-red-700 text-white p-1 text-xs"
               >
-                Remove
+                X
               </button>
             </div>
           ))}
