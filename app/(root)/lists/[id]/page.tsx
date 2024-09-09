@@ -21,7 +21,8 @@ async function Page({ params }: { params: { id: string } }) {
 
   const list = await fetchListByID(params.id);
   const comments = await fetchTopLevelComments(params.id);
-  console.log(comments);
+
+  if (!list) redirect("/");
   return (
     <div className="flex flex-col gap-4 mt-4 px-16 mb-44">
       <h1 className="text-light-1 text-heading2-bold">{list.title}</h1>
@@ -90,7 +91,8 @@ async function Page({ params }: { params: { id: string } }) {
         comments.map((comment: any) => (
           <CommentCard
             key={comment._id.toString()}
-            id={comment._id.toString()}
+            currentUser={userInfo._id.toString()}
+            commentId={comment._id.toString()}
             text={comment.text}
             commenter={{
               id: comment.commenter._id.toString(),
@@ -105,6 +107,10 @@ async function Page({ params }: { params: { id: string } }) {
             numReplies={comment.numReplies}
             createdAt={comment.createdAt}
             updatedAt={comment.updatedAt}
+            userID={userInfo._id.toString()}
+            userImage={userInfo.image}
+            postID={list._id.toString()}
+            postType="List"
           />
         ))
       ) : (
@@ -112,10 +118,11 @@ async function Page({ params }: { params: { id: string } }) {
       )}
 
       <PostComment
-        _id={userInfo._id.toString()}
+        userID={userInfo._id.toString()}
         image={userInfo.image}
         postID={list._id.toString()}
         postType="List"
+        isCommentCardShown={true}
       />
     </div>
   );

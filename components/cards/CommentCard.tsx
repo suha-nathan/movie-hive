@@ -1,12 +1,15 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import DeleteComment from "../forms/DeleteComment";
 import { formatDateString } from "@/lib/utils";
 import { Button } from "../ui/button";
+import { TrashIcon } from "@radix-ui/react-icons";
+import PostComment from "../forms/PostComment";
+import { useState } from "react";
 
 interface Props {
-  id: string;
+  currentUser: string;
+  commentId: string;
   text: string;
   commenter: {
     id: string;
@@ -19,19 +22,34 @@ interface Props {
   numReplies: number;
   createdAt: Date;
   updatedAt: Date;
+  userID: string;
+  userImage: string;
+  postID: string;
+  postType: string;
 }
 
 const CommentCard = ({
-  id,
+  currentUser,
+  commentId,
   text,
   commenter,
   parentComment,
   replyToUsername,
   replyToUser,
   numReplies,
+  createdAt,
+  updatedAt,
+  userID,
+  userImage,
+  postID,
+  postType,
 }: Props) => {
+  const [isRepliesShown, setIsRepliesShown] = useState(false);
+  const [isCommentCardShown, setIsCommentCardShown] = useState(false);
+
   const handleReplyClick = () => {
-    console.log("handling reply");
+    console.log("toggling reply");
+    setIsCommentCardShown(!isCommentCardShown);
   };
   const showReplies = () => {
     console.log("handling reply");
@@ -72,12 +90,12 @@ const CommentCard = ({
               <div className="flex gap-3.5">
                 <Image
                   src="/assets/heart-gray.svg"
-                  alt="heart"
+                  alt="like"
                   width={24}
                   height={24}
                   className="cursor-pointer object-contain"
                 />
-                <Button className="bg-none" onClick={handleReplyClick}>
+                <button onClick={handleReplyClick}>
                   <Image
                     src="/assets/reply.svg"
                     alt="reply"
@@ -85,22 +103,25 @@ const CommentCard = ({
                     height={24}
                     className="cursor-pointer object-contain"
                   />
-                </Button>
-
-                {/* <Image
-                  src="/assets/repost.svg"
-                  alt="heart"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
-                />
-                <Image
-                  src="/assets/share.svg"
-                  alt="heart"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
-                /> */}
+                </button>
+                {/* delete and edit function only for same user */}
+                {currentUser === commenter.id && (
+                  <TrashIcon
+                    color="#5C5C7B"
+                    width={24}
+                    height={24}
+                    className="cursor-pointer object-contain"
+                  />
+                )}
+                {currentUser === commenter.id && (
+                  <Image
+                    src="/assets/edit.svg"
+                    alt="edit"
+                    width={24}
+                    height={24}
+                    className="cursor-pointer object-contain"
+                  />
+                )}
               </div>
               {!parentComment && numReplies > 0 && (
                 <Button onClick={showReplies}>
@@ -112,8 +133,15 @@ const CommentCard = ({
             </div>
           </div>
         </div>
-        <DeleteComment />
       </div>
+      <PostComment
+        userID={userID}
+        image={userImage}
+        postID={postID}
+        postType={postType}
+        isCommentCardShown={isCommentCardShown}
+        parentComment={commentId}
+      />
     </article>
   );
 };

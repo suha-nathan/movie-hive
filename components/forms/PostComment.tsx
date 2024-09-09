@@ -20,12 +20,21 @@ import Image from "next/image";
 import { createComment } from "@/lib/actions/comment.actions";
 
 interface Props {
-  _id: string;
+  userID: string;
   image: string;
   postID: string;
   postType: string;
+  isCommentCardShown: boolean;
+  parentComment?: string;
 }
-const PostComment = ({ _id, image, postID, postType }: Props) => {
+const PostComment = ({
+  userID,
+  image,
+  postID,
+  postType,
+  isCommentCardShown,
+  parentComment,
+}: Props) => {
   // const router = useRouter();
   // const pathname = usePathname();
 
@@ -42,9 +51,9 @@ const PostComment = ({ _id, image, postID, postType }: Props) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           text: values.comment,
-          commenter: _id,
+          commenter: userID,
           postID,
-          parentComment: null,
+          parentComment: parentComment ? parentComment : null,
           replyToUsername: null,
           replyToUser: null,
           postType,
@@ -60,6 +69,7 @@ const PostComment = ({ _id, image, postID, postType }: Props) => {
       console.error("ERROR: ", error);
     }
   };
+  if (!isCommentCardShown) return null;
   return (
     <Form {...form}>
       <form
