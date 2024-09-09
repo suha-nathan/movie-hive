@@ -8,16 +8,10 @@ const commentSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    parent: {
+    parentComment: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Comment",
     },
-    children: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
-      },
-    ],
     post: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
@@ -28,12 +22,11 @@ const commentSchema = new mongoose.Schema(
       required: true,
       enum: ["Review", "List"],
     },
-    taggedUsers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+    replyToUsername: String, //username at time of comment creation.
+    replyToUser: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );

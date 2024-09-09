@@ -3,7 +3,9 @@
 import { connectToDB } from "../mongoose";
 import List from "../models/list.model";
 import User from "../models/user.model";
+import Comment from "../models/comment.model";
 import { SortOrder, FilterQuery } from "mongoose";
+import { listenerCount } from "stream";
 
 export async function fetchLists() {
   try {
@@ -116,12 +118,11 @@ export async function fetchListByID(id: string) {
   try {
     await connectToDB();
 
-    const result = await List.findById(id)
+    const list = await List.findById(id)
       .populate({ path: "movies", select: "poster tmdbID title releaseDate" })
-      .populate({ path: "creator", select: "_id username image" })
-      .populate("comments");
+      .populate({ path: "creator", select: "_id username image" });
 
-    return result;
+    return list;
   } catch (error: any) {
     console.error("ERROR fetching lists: ", error.message);
     return [];
@@ -149,10 +150,10 @@ export async function createList({
       movies,
     });
 
-    //update user model with new list
-    await User.findByIdAndUpdate(creator, {
-      $push: { lists: createdList._id },
-    });
+    // //update user model with new list
+    // await User.findByIdAndUpdate(creator, {
+    //   $push: { lists: createdList._id },
+    // });
 
     return createdList._id.toString();
   } catch (error: any) {

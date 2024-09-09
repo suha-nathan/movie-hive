@@ -7,6 +7,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { generateMovieURL } from "@/lib/utils";
 import CarouselHeader from "@/components/shared/CarouselHeader";
+import PostComment from "@/components/forms/PostComment";
+import CommentCard from "@/components/cards/CommentCard";
+import { fetchTopLevelComments } from "@/lib/actions/comment.actions";
 
 async function Page({ params }: { params: { id: string } }) {
   const user = await currentUser();
@@ -17,10 +20,10 @@ async function Page({ params }: { params: { id: string } }) {
   if (!userInfo.onboarded) redirect("/onboarding");
 
   const list = await fetchListByID(params.id);
-
-  console.log("LIST: ", list);
+  const comments = await fetchTopLevelComments(params.id);
+  console.log(comments);
   return (
-    <div className="flex flex-col gap-4 mt-4 px-16">
+    <div className="flex flex-col gap-4 mt-4 px-16 mb-44">
       <h1 className="text-light-1 text-heading2-bold">{list.title}</h1>
       <div className="flex flex-col md:flex-row w-[50vw] justify-between">
         <Link
@@ -83,6 +86,37 @@ async function Page({ params }: { params: { id: string } }) {
         </div>
       </div>
       <CarouselHeader headerTitle="Comments" style="mt-4" />
+      {comments?.length > 0 ? (
+        comments.map((comment: any) => (
+          <CommentCard
+            key={comment._id.toString()}
+            id={comment._id.toString()}
+            text={comment.text}
+            commenter={{
+              id: comment.commenter._id.toString(),
+              image: comment.commenter.image,
+              username: comment.commenter.username,
+            }}
+            parentComment={
+              comment.parentComment ? comment.parentComment.toString() : null
+            }
+            replyToUsername={comment.replyToUsername}
+            replyToUser={comment.replyToUser}
+            numReplies={comment.numReplies}
+            createdAt={comment.createdAt}
+            updatedAt={comment.updatedAt}
+          />
+        ))
+      ) : (
+        <p className="no-result">No comments</p>
+      )}
+
+      <PostComment
+        _id={userInfo._id.toString()}
+        image={userInfo.image}
+        postID={list._id.toString()}
+        postType="List"
+      />
     </div>
   );
 }

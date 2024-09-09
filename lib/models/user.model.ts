@@ -11,12 +11,6 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    comments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
-      },
-    ],
     following: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -27,18 +21,6 @@ const userSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-      },
-    ],
-    reviews: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Review",
-      },
-    ],
-    lists: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "List",
       },
     ],
   },

@@ -3,6 +3,7 @@
 import { connectToDB } from "../mongoose";
 import Review from "../models/review.model";
 import User from "../models/user.model";
+import Comment from "../models/comment.model";
 
 export async function fetchReviews() {
   try {
@@ -78,7 +79,17 @@ export async function fetchReviewByID(id: string) {
         select: "_id tmdbID title releaseDate poster",
       });
 
-    console.log(review);
+    //fetch all top level comments for list
+    const comments = await Comment.find({
+      post: review._id,
+      parentComment: null,
+    })
+      .populate({
+        path: "commenter",
+        select: "_id image username",
+      })
+      .sort({ createdAt: 1 });
+
     return review;
   } catch (error: any) {
     console.error("ERROR fetching review: ", error.message);
@@ -119,10 +130,10 @@ export async function createReview({
       reviewer,
       numStars,
     });
-    //update user model with review
-    await User.findByIdAndUpdate(reviewer, {
-      $push: { reviews: createdReview._id },
-    });
+    // //update user model with review
+    // await User.findByIdAndUpdate(reviewer, {
+    //   $push: { reviews: createdReview._id },
+    // });
 
     return createdReview._id.toString();
   } catch (error: any) {
