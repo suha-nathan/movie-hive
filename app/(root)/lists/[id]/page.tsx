@@ -122,7 +122,7 @@ async function Page({ params }: { params: { id: string } }) {
         image={userInfo.image}
         postID={list._id.toString()}
         postType="List"
-        isCommentCardShown={true}
+        isFormShown={true}
       />
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { connectToDB } from "../mongoose";
 import Comment from "../models/comment.model";
+import { revalidatePath } from "next/cache";
 
 export async function createComment({
   text,
@@ -11,6 +12,7 @@ export async function createComment({
   replyToUsername,
   replyToUser,
   postType,
+  pathname,
 }: {
   text: string;
   commenter: string;
@@ -19,6 +21,7 @@ export async function createComment({
   replyToUsername?: string;
   replyToUser?: string;
   postType: string;
+  pathname: string;
 }) {
   try {
     await connectToDB();
@@ -33,6 +36,7 @@ export async function createComment({
       postModel: postType,
     });
 
+    if (pathname) revalidatePath(pathname);
     return createdComment;
   } catch (error: any) {
     console.error("ERROR creating review: ", error.message);
@@ -88,7 +92,7 @@ export async function fetchReplies(commentId: string) {
       })
       .populate({
         path: "replyToUser",
-        select: "_id image username",
+        select: "_id username",
       })
       .sort({ createdAt: 1 });
 

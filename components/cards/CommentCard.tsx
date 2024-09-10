@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { TrashIcon } from "@radix-ui/react-icons";
 import PostComment from "../forms/PostComment";
 import { useState } from "react";
+import ReplyCard from "./ReplyCard";
 
 interface Props {
   currentUser: string;
@@ -17,8 +18,6 @@ interface Props {
     username: string;
   };
   parentComment: string | null;
-  replyToUsername?: string;
-  replyToUser?: string;
   numReplies: number;
   createdAt: Date;
   updatedAt: Date;
@@ -34,8 +33,6 @@ const CommentCard = ({
   text,
   commenter,
   parentComment,
-  replyToUsername,
-  replyToUser,
   numReplies,
   createdAt,
   updatedAt,
@@ -45,21 +42,61 @@ const CommentCard = ({
   postType,
 }: Props) => {
   const [isRepliesShown, setIsRepliesShown] = useState(false);
-  const [isCommentCardShown, setIsCommentCardShown] = useState(false);
+  const [isFormShown, setIsFormShown] = useState(false);
+  const [replies, setReplies] = useState([]);
+  const [taggedUser, setTaggedUser] = useState({ id: "", username: "" });
 
   const handleReplyClick = () => {
-    console.log("toggling reply");
-    setIsCommentCardShown(!isCommentCardShown);
-  };
-  const showReplies = () => {
     console.log("handling reply");
+    setIsFormShown(!isFormShown);
+    setTaggedUser({
+      id: commenter.id,
+      username: commenter.username,
+    });
+    if (taggedUser.username)
+      document?.getElementById("input-text")?.value = `@${taggedUser.username}`;
+  };
+
+  const hideReplies = () => {
+    setIsRepliesShown(false);
+  };
+
+  const showReplies = async () => {
+    try {
+      const response = await fetch(`/api/comment/fetch?id=${commentId}`);
+      const data = await response.json();
+      setIsRepliesShown(true);
+
+      const dataTransform = data.map((comment: any) => {
+        return {
+          commentId: comment._id,
+          text: comment.text,
+          commenter: {
+            _id: comment.commenter._id,
+            image: comment.commenter.image,
+            username: comment.commenter.username,
+          },
+          parentComment: comment.parentComment,
+          replyToUsername: comment.replyToUsername,
+          replyToUser: comment.replyToUser
+            ? {
+                _id: comment.replyToUser._id,
+                username: comment.replyToUser.username,
+              }
+            : null,
+          createdAt: comment.createdAt,
+          updatedAt: comment.updatedAt,
+        };
+      });
+
+      setReplies(dataTransform);
+    } catch (error) {
+      console.error("ERROR: fetching replies: ", error);
+    }
   };
 
   return (
-    <article
-      className={`flex w-full flex-col rounded-xl
-    ${parentComment ? "px-0 xs:px-7" : "bg-dark-2 p-7"}`}
-    >
+    <article className={"flex w-full flex-col rounded-xl bg-dark-2 p-7"}>
       <div className="flex items-start justify-between">
         <div className="flex w-full flex-1 flex-row gap-4">
           <div className="flex flex-col items-center">
@@ -69,7 +106,7 @@ const CommentCard = ({
             >
               <Image
                 src={commenter.image}
-                alt="user_community_image"
+                alt="user_image"
                 fill
                 className="cursor-pointer rounded-full"
               />
@@ -84,9 +121,7 @@ const CommentCard = ({
             </Link>
             <p className="mt-2 text-small-regular text-light-2">{text}</p>
 
-            <div
-              className={`${parentComment && "mb-10"} mt-5 flex flex-col gap-3`}
-            >
+            <div className={`mt-5 flex flex-col gap-3`}>
               <div className="flex gap-3.5">
                 <Image
                   src="/assets/heart-gray.svg"
@@ -123,25 +158,60 @@ const CommentCard = ({
                   />
                 )}
               </div>
-              {!parentComment && numReplies > 0 && (
-                <Button onClick={showReplies}>
+              <PostComment
+                userID={userID}
+                image={userImage}
+                postID={postID}
+                postType={postType}
+                isFormShown={isFormShown}
+                setIsFormShown={setIsFormShown}
+                parentComment={commentId}
+                taggedUser={taggedUser}
+                setTaggedUser={setTaggedUser}
+              />
+              {numReplies > 0 && !isRepliesShown && (
+                <button onClick={showReplies}>
                   <p className="mt-1 text-subtle-medium text-gray-1">
                     {numReplies} repl{numReplies > 1 ? "ies" : "y"}
                   </p>
-                </Button>
+                </button>
+              )}
+              {numReplies > 0 && isRepliesShown && (
+                <>
+                  {replies.length > 0 &&
+                    replies.map((reply: any) => (
+                      <ReplyCard
+                        key={reply.commentId}
+                        currentUser={currentUser}
+                        commentId={reply.commentId}
+                        text={reply.text}
+                        commenter={{
+                          id: reply.commenter._id,
+                          image: reply.commenter.image,
+                          username: reply.commenter.username,
+                        }}
+                        parentComment={reply.parentComment}
+                        replyToUsername={reply.replyToUsername}
+                        replyToUser={reply.replyToUser}
+                        createdAt={reply.createdAt}
+                        updatedAt={reply.updatedAt}
+                        userID={userID}
+                        userImage={userImage}
+                        postID={postID}
+                        postType={postType}
+                      />
+                    ))}
+                  <button onClick={hideReplies}>
+                    <p className="mt-1 text-subtle-medium text-gray-1">
+                      hide repl{numReplies > 1 ? "ies" : "y"}
+                    </p>
+                  </button>
+                </>
               )}
             </div>
           </div>
         </div>
       </div>
-      <PostComment
-        userID={userID}
-        image={userImage}
-        postID={postID}
-        postType={postType}
-        isCommentCardShown={isCommentCardShown}
-        parentComment={commentId}
-      />
     </article>
   );
 };

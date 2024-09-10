@@ -17,26 +17,46 @@ import * as z from "zod";
 import { usePathname, useRouter } from "next/navigation";
 import { commentValidation } from "@/lib/validations/comment";
 import Image from "next/image";
-import { createComment } from "@/lib/actions/comment.actions";
+import { findUsernameMention } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 interface Props {
   userID: string;
   image: string;
   postID: string;
   postType: string;
-  isCommentCardShown: boolean;
+  isFormShown: boolean;
+  setIsFormShown?: React.Dispatch<React.SetStateAction<boolean>>;
   parentComment?: string;
+  taggedUser?: {
+    id: string;
+    username: string;
+  };
+  setTaggedUser?: React.Dispatch<
+    React.SetStateAction<{
+      id: string;
+      username: string;
+    }>
+  >;
 }
 const PostComment = ({
   userID,
   image,
   postID,
   postType,
-  isCommentCardShown,
+  isFormShown,
+  setIsFormShown,
   parentComment,
+  taggedUser,
+  setTaggedUser,
 }: Props) => {
   // const router = useRouter();
-  // const pathname = usePathname();
+  const pathname = usePathname();
+
+  const [username, setUsername] = useState(taggedUser?.username || "");
+  useEffect(() => {
+    console.log("component mounting, taggedUser: ", username);
+  }, []);
 
   const form = useForm({
     resolver: zodResolver(commentValidation),
@@ -46,6 +66,17 @@ const PostComment = ({
   });
   const onSubmit = async (values: z.infer<typeof commentValidation>) => {
     try {
+      // remove tagged user if "@username" is removed from text
+      if (
+        taggedUser &&
+        setTaggedUser &&
+        !findUsernameMention(values.comment, taggedUser.username)
+      ) {
+        setTaggedUser({
+          id: "",
+          username: "",
+        });
+      }
       const response = await fetch("/api/comment/new", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -54,9 +85,11 @@ const PostComment = ({
           commenter: userID,
           postID,
           parentComment: parentComment ? parentComment : null,
-          replyToUsername: null,
-          replyToUser: null,
+          replyToUsername:
+            taggedUser && taggedUser.username ? taggedUser.username : null,
+          replyToUser: taggedUser && taggedUser.id ? taggedUser.id : null,
           postType,
+          pathname,
         }),
       });
       const data = await response.json();
@@ -69,11 +102,13 @@ const PostComment = ({
       console.error("ERROR: ", error);
     }
   };
-  if (!isCommentCardShown) return null;
+
   return (
     <Form {...form}>
       <form
-        className="flex flex-row items-center gap-10"
+        className={`flex flex-row items-center gap-5 ${
+          !isFormShown && "hidden"
+        }`}
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
@@ -91,12 +126,25 @@ const PostComment = ({
                 />
               </FormLabel>
               <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1">
-                <Textarea rows={2} {...field} placeholder="Add a Comment" />
+                <Textarea
+                  rows={2}
+                  {...field}
+                  placeholder="Add a Comment"
+                  id="input-text"
+                />
               </FormControl>
-              <FormMessage />
+              {/* <FormMessage /> */}
             </FormItem>
           )}
         />
+        {setIsFormShown && (
+          <Button
+            className="bg-secondary-500"
+            onClick={() => setIsFormShown(false)}
+          >
+            Cancel
+          </Button>
+        )}
         <Button type="submit" className="bg-primary-500">
           Post Comment
         </Button>

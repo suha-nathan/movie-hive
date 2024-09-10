@@ -43,3 +43,22 @@ export function parseMovieURL(url: string) {
 
   return movieWords[0];
 }
+
+export function findUsernameMention(
+  comment: string,
+  username: string
+): boolean {
+  const regex = new RegExp(`@${username}`, "g");
+
+  return regex.test(comment);
+}
+
+export function replaceUsernameMention(
+  comment: string,
+  username: string,
+  userId: string
+): string{
+  const regex = new RegExp(`@${username}`, "g");
+  const replacementString = ` <a href="/profile/${userId}">@${username}</a>`;
+  return comment.replace(regex, replacementString);
+}

@@ -55,18 +55,14 @@ export default async function Page({ params }: { params: { id: string } }) {
           <CommentCard
             key={comment._id.toString()}
             currentUser={userInfo._id.toString()}
-            id={comment._id.toString()}
+            commentId={comment._id.toString()}
             text={comment.text}
             commenter={{
               id: comment.commenter._id.toString(),
               image: comment.commenter.image,
               username: comment.commenter.username,
             }}
-            parentComment={
-              comment.parentComment ? comment.parentComment.toString() : null
-            }
-            replyToUsername={comment.replyToUsername}
-            replyToUser={comment.replyToUser}
+            parentComment={comment.parentComment}
             numReplies={comment.numReplies}
             createdAt={comment.createdAt}
             updatedAt={comment.updatedAt}
@@ -85,7 +81,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         image={userInfo.image}
         postID={review._id.toString()}
         postType="Review"
-        isCommentCardShown={true}
+        isFormShown={true}
       />
     </div>
   );

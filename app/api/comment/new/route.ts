@@ -11,6 +11,7 @@ export async function POST(request: Request) {
       replyToUsername,
       replyToUser,
       postType,
+      pathname,
     } = await request.json();
 
     const createdComment = await createComment({
@@ -21,6 +22,7 @@ export async function POST(request: Request) {
       replyToUsername,
       replyToUser,
       postType,
+      pathname,
     });
 
     return NextResponse.json({ success: true, comment: createdComment });
