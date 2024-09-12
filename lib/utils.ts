@@ -55,10 +55,12 @@ export function findUsernameMention(
 
 export function replaceUsernameMention(
   comment: string,
-  username: string,
-  userId: string
-): string{
+  username?: string,
+  userId?: string
+): string {
+  if (!username || !userId) return comment;
+
   const regex = new RegExp(`@${username}`, "g");
-  const replacementString = ` <a href="/profile/${userId}">@${username}</a>`;
+  const replacementString = `<a href="/profile/${userId}">@${username}</a>`;
   return comment.replace(regex, replacementString);
 }

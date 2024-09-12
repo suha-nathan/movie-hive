@@ -54,9 +54,6 @@ const PostComment = ({
   const pathname = usePathname();
 
   const [username, setUsername] = useState(taggedUser?.username || "");
-  useEffect(() => {
-    console.log("component mounting, taggedUser: ", username);
-  }, []);
 
   const form = useForm({
     resolver: zodResolver(commentValidation),
@@ -64,8 +61,37 @@ const PostComment = ({
       comment: "",
     },
   });
+
+  useEffect(() => {
+    if (taggedUser && taggedUser.username) {
+      form.setValue("comment", `@${taggedUser.username}`);
+    }
+  }, [taggedUser]);
+
+  const handleCancel = () => {
+    if (setIsFormShown) setIsFormShown(false);
+    form.setValue("comment", "");
+    if (setTaggedUser) {
+      setTaggedUser({
+        id: "",
+        username: "",
+      });
+    }
+  };
   const onSubmit = async (values: z.infer<typeof commentValidation>) => {
     try {
+      let formData = {
+        text: values.comment,
+        commenter: userID,
+        postID,
+        parentComment: parentComment ? parentComment : null,
+        replyToUsername:
+          taggedUser && taggedUser.username ? taggedUser.username : null,
+        replyToUser: taggedUser && taggedUser.id ? taggedUser.id : null,
+        postType,
+        pathname,
+      };
+
       // remove tagged user if "@username" is removed from text
       if (
         taggedUser &&
@@ -76,21 +102,14 @@ const PostComment = ({
           id: "",
           username: "",
         });
+        formData.replyToUsername = null;
+        formData.replyToUser = null;
       }
+
       const response = await fetch("/api/comment/new", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: values.comment,
-          commenter: userID,
-          postID,
-          parentComment: parentComment ? parentComment : null,
-          replyToUsername:
-            taggedUser && taggedUser.username ? taggedUser.username : null,
-          replyToUser: taggedUser && taggedUser.id ? taggedUser.id : null,
-          postType,
-          pathname,
-        }),
+        body: JSON.stringify(formData),
       });
       const data = await response.json();
       if (response.ok) {
@@ -138,10 +157,7 @@ const PostComment = ({
           )}
         />
         {setIsFormShown && (
-          <Button
-            className="bg-secondary-500"
-            onClick={() => setIsFormShown(false)}
-          >
+          <Button className="bg-secondary-500" onClick={() => handleCancel()}>
             Cancel
           </Button>
         )}

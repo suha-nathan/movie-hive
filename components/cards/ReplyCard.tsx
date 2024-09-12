@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { TrashIcon } from "@radix-ui/react-icons";
 import PostComment from "../forms/PostComment";
-import { replaceUsernameMention } from "@/lib/utils";
 
 interface Props {
   currentUser: string;
@@ -48,13 +47,35 @@ function ReplyCard({
   const [taggedUser, setTaggedUser] = useState({ id: "", username: "" });
 
   const handleReplyClick = () => {
+    console.log("handling replyCard reply");
     setIsFormShown(!isFormShown);
+    setTaggedUser({
+      id: commenter.id,
+      username: commenter.username,
+    });
   };
 
-  useEffect(() => {
-    if (replyToUser && replyToUsername)
-      replaceUsernameMention(text, replyToUsername, replyToUser._id);
-  }, []);
+  function replaceUsernameMention(
+    comment: string,
+    username?: string,
+    userId?: string
+  ): (string | JSX.Element)[] {
+    if (!username || !userId) return [comment];
+
+    const parts = comment.split(new RegExp(`@${username}`, "g"));
+
+    console.log(parts);
+    return parts.map((part, index) =>
+      part === `@${username}` ? (
+        <a key={index} href={`/profile/${userId}`} className="text-link">
+          {part}
+        </a>
+      ) : (
+        part
+      )
+    );
+  }
+
   return (
     <article className={"flex w-full flex-col rounded-xl px-0 xs:px-7"}>
       <div className="flex items-start justify-between">
@@ -79,7 +100,9 @@ function ReplyCard({
                 {commenter.username}
               </h4>
             </Link>
-            <p className="mt-2 text-small-regular text-light-2">{text}</p>
+            <p className="mt-2 text-small-regular text-light-2">
+              {replaceUsernameMention(text, replyToUsername, replyToUser?._id)}
+            </p>
 
             <div
               className={`${parentComment && "mb-10"} mt-5 flex flex-col gap-3`}

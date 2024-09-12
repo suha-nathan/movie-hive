@@ -47,14 +47,12 @@ const CommentCard = ({
   const [taggedUser, setTaggedUser] = useState({ id: "", username: "" });
 
   const handleReplyClick = () => {
-    console.log("handling reply");
+    console.log("handling CommentCard reply");
     setIsFormShown(!isFormShown);
     setTaggedUser({
       id: commenter.id,
       username: commenter.username,
     });
-    if (taggedUser.username)
-      document?.getElementById("input-text")?.value = `@${taggedUser.username}`;
   };
 
   const hideReplies = () => {
