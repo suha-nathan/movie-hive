@@ -62,12 +62,16 @@ function ReplyCard({
   ): (string | JSX.Element)[] {
     if (!username || !userId) return [comment];
 
-    const parts = comment.split(new RegExp(`@${username}`, "g"));
+    const regExpString = new RegExp(`(@${username})`, "g");
+    const parts = comment.split(regExpString);
 
-    console.log(parts);
     return parts.map((part, index) =>
       part === `@${username}` ? (
-        <a key={index} href={`/profile/${userId}`} className="text-link">
+        <a
+          key={index}
+          href={`/profile/${userId}`}
+          className="text-link underline"
+        >
           {part}
         </a>
       ) : (
