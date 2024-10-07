@@ -1,7 +1,7 @@
 "use client";
 
 import { useTruncatedElement } from "@/lib/client-utlis";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -23,6 +23,9 @@ interface Props {
 const MovieCard = ({ movie }: { movie: Props }) => {
   const ref = useRef<HTMLParagraphElement>(null);
   const ref2 = useRef<HTMLParagraphElement>(null);
+
+  const [isLiked, setIsLiked] = useState(false);
+
   const { isTruncated, isShowingMore, toggleIsShowingMore } =
     useTruncatedElement({
       ref,
@@ -30,6 +33,9 @@ const MovieCard = ({ movie }: { movie: Props }) => {
   const obj2 = useTruncatedElement({
     ref: ref2,
   });
+
+  const handleLike = () => {};
+
   return (
     <section className="mt-9 flex flex-col lg:flex-row">
       {/* ---------------Poster--------------- */}
@@ -125,14 +131,23 @@ const MovieCard = ({ movie }: { movie: Props }) => {
       lg:flex-col justify-center lg:justify-start gap-2 
       lg:gap-4 mt-4"
       >
-        <Button className="movie-card-like_btn">
+        <Button className="movie-card-like_btn" onClick={handleLike}>
           <span className="hidden sm:inline pr-1">Like Movie</span>
-          <Image
-            src="/assets/heart.svg"
-            alt="heart_icon"
-            width={20}
-            height={20}
-          />
+          {isLiked ? (
+            <Image
+              src="/assets/heart-filled-white.svg"
+              alt="liked"
+              width={20}
+              height={20}
+            />
+          ) : (
+            <Image
+              src="/assets/heart.svg"
+              alt="not_liked"
+              width={20}
+              height={20}
+            />
+          )}
         </Button>
         <Button className="movie-card-review_btn">
           <Link
